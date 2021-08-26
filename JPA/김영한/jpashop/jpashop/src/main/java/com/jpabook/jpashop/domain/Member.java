@@ -24,5 +24,10 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Order> orders = new ArrayList<>(); // 컬렉션은 필드에서 초기화 하는 것이 best practice
 
+//    public static void main(String[] args) {
+//        Member member = new Member();
+//        Long id = member.getId();
+//        System.out.println("id = " + id);
+//    }
 }
 
