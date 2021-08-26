@@ -1,0 +1,17 @@
+<div style ="text-align: center">
+    <h2>입력한 텍스트 정렬</h2>
+    <div>
+        {{fulltext}}
+    </div>
+
+    <h3>당신이 입력한 텍스트 수는 {{count}}개의 단어로 구성되어 있습니다</h3>
+    
+    <div>
+        {% for word, totalcount in wordDict %}
+            {{word}} : {{total}}
+            <br>
+            test용 문장 : {{fulltext}}
+            <br>
+        {% endfor %}
+    </div>
+</div>
