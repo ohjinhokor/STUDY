@@ -1,0 +1,7 @@
+장고 순서
+
+가상환경 설정 python -m venv (가상환경이름)
+가상환경 들어가기 해당가상환경(윈도우는 Scripts 맥은 bin)위치에서 activate
+장고설치 pip install django
+프로젝트 시작 django-admin startproject (project이름)
+앱 설치 python manage.py startapp (app이름)
