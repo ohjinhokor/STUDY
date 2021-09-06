@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="ex1-hellooo-jpa" />
+        <module name="jpa_basic" />
       </profile>
     </annotationProcessing>
   </component>
