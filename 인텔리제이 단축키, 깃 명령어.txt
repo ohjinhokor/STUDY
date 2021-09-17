@@ -1,0 +1,31 @@
+ctrl alt v -> return값 알려주는 단축키
+ctrl p -> 함수 매개변수 알려줌
+alt + enter -> 인라인으로 합치기
+alt + enter -> 클래스에서 인터페이스 메서드 implements
+ctrl + shilf + t -> 테스트 코드 작성
+ctrl + e -> 이전화면으로 돌아가기
+ctrl + alt + m -> extract method. ex) appconfig에서 매개변수 바꾸면서 함수 새로 생성
+iter + tab -> 반복문생성
+ctrl+f12 + (fn) -> 클래스의 함수 변수 요약해서 보여줌
+ctrl+N -> 클래스 파일 등 찾기
+soutv + tab -> system.out....(프린트 + 변수명)
+soutm + tab -> system.out....(프린트 + 함수명)
+ctrl + shift + f -> 전체파일에서 검색
+shift+ f6 -> rename
+ctrl+alt+p -> 함수 안의 값들 매개변수로 꺼내기
+ctrl + shift + t -> 테스트함수랑 테스트 당하는 함수 왔다갔다
+ctrl + shift + f9 -> devtools를 사용해서 컴파일 할때 리컴파일(watch랑 비슷)
+
+view -> tool window bars : 왼쪽
+
+-----------------------------------------------------------
+
+깃 단축키
+
+git checkout <파일명>  -> 워킹 디렉토리에서 실수를 했을 때 최근 커밋으로 변경함(잘 쓸 듯****)
+git reset <파일명> ->  staged(add)된 파일을 unstage로 변경함.
+git rm <파일명> -> git에서 추적되지 않고, 워킹 디렉토리에서 삭제
+git rm --cached -> git에서 추적하지 않지만, 워킹 디렉토리에는 남겨놓음(이미 커밋된 파일을 gitignore하고 싶을 때 사용)
+git commit --amend ->  커밋 합치기(다시 커밋하기)
+git log -> 깃 히스토리 보여줌
+git diff -> stage(또는 commit)된 내용과, 워킹 디렉토리 파일 내용의 차이점을 보여줌

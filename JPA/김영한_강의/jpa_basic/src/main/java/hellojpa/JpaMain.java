@@ -77,17 +77,27 @@ public class JpaMain {
 //
 //        em.flush();
 //
-        Member member = em.find(Member.class, 150L);
-        member.setName("ABCD");
+//        System.out.println("=============아래 확인========================");
+//        Member member = em.find(Member.class, 150L);
+//        member.setName("ABCD");
+//        System.out.println("=========================위에 확인======================");
+//        //em.detach(member);
+//        //em.clear();
+//        //em.close();
+//
+//        System.out.println("====================");
+//
+        Member member = new Member();
+        member.setId(2L);
+        member.setUsername("B");
+        member.setRoleType(RoleType.USER);
 
-        //em.detach(member);
-        //em.clear();
-        //em.close();
-        
-        System.out.println("====================");
+        em.persist(member);
 
+        System.out.println("===============================");
         tx.commit();
     } catch(Exception e) {
+        System.out.println("여기로");
         tx.rollback();
         }
     finally{
