@@ -22,7 +22,7 @@ view -> tool window bars : 왼쪽
 
 깃 단축키
 
-git checkout <파일명>  -> 워킹 디렉토리에서 실수를 했을 때 최근 커밋으로 변경함(잘 쓸 듯****)
+실수했을때!! : git checkout <파일명>  -> 워킹 디렉토리에서 실수를 했을 때 최근 커밋으로 변경함(잘 쓸 듯****)
 git reset <commit id> ->  staged(add)된 파일을 unstage로 변경함.(soft,mixed,hard)
 git revert <commit id> -> commit된 내용을 revert함(이력을 남김)
 git rm <파일명> -> git에서 추적되지 않고, 워킹 디렉토리에서 삭제
