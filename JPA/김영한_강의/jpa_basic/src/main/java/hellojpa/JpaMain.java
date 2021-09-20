@@ -88,9 +88,9 @@ public class JpaMain {
 //        System.out.println("====================");
 //
         Member member = new Member();
-        member.setId(2L);
+        //member.setId("ID_A");
         member.setUsername("B");
-        member.setRoleType(RoleType.USER);
+        //member.setRoleType(RoleType.USER);
 
         em.persist(member);
 
