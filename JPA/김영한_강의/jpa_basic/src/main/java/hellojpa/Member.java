@@ -59,7 +59,7 @@ import java.util.Date;
 //        pkColumnValue = "MEMBER_SEQ", allocationSize = 1)
 
 
-@Entity
+//@Entity
 public class Member {
 //    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "member_seq_generator") //SEQUENCE(ORACLE),
 //    @GeneratedValue(strategy = GenerationType.TABLE,
@@ -77,13 +77,30 @@ public class Member {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
+    @Column(name = "member_id")
     private Long id; // id에는 Long을 사용하는 것이 바람직하다.
 
-    @Column(name = "name", nullable = true)// columnDefinition = "varchar(100) default 'EMPTY'"
+    @Column//, nullable = true)// columnDefinition = "varchar(100) default 'EMPTY'"
     private String username;
 
+//    @Column(name = "team_id")
+//    private Long temaId;
+
+    @ManyToOne//(fetch = FetchType.LAZY) // 지연로딩전략
+    @JoinColumn(name = "team_id") // 외래키가 있는 곳을 연관관계의 주인으로 정한다.
+    private Team team;
+
     public Member(){}
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void changeTeam(Team team) {
+        this.team = team;
+        team.getMembers().add(this);
+    }
 
     public Long getId() {
         return id;
@@ -100,6 +117,30 @@ public class Member {
     public void setUsername(String username) {
         this.username = username;
     }
+
+//    public Long getTemaId() {
+//        return temaId;
+//    }
+//
+//    public void setTemaId(Long temaId) {
+//        this.temaId = temaId;
+//    }
+
+    //    public Long getId() {
+//        return id;
+//    }
+//
+//    public void setId(Long id) {
+//        this.id = id;
+//    }
+//
+//    public String getUsername() {
+//        return username;
+//    }
+//
+//    public void setUsername(String username) {
+//        this.username = username;
+//    }
 
     //    private int age; // Integer로 해도 됨
 //

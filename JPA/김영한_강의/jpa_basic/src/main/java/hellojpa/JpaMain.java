@@ -87,14 +87,44 @@ public class JpaMain {
 //
 //        System.out.println("====================");
 //
-        Member member = new Member();
-        //member.setId("ID_A");
-        member.setUsername("B");
-        //member.setRoleType(RoleType.USER);
+//        Member member = new Member();
+//        //member.setId("ID_A");
+//        member.setUsername("B");
+//        //member.setRoleType(RoleType.USER);
+//
+//        em.persist(member);
+//
+//        System.out.println("===============================");
 
+        // 저장
+
+
+        Team team = new Team();
+        team.setName("TeamA");
+        //team.getMembers().add(member);
+        em.persist(team);
+
+        Member member = new Member();
+        member.setUsername("member1");
+        member.changeTeam(team);
         em.persist(member);
 
-        System.out.println("===============================");
+//        team.getMembers().add(member);  -->> 이를 연관관계 편의 메서드로 바꿔주자
+
+        em.flush();
+        em.clear();
+
+
+//        // 찾기
+//        Member findmember = em.find(Member.class, member.getId());
+//        Team findTeam = findmember.getTeam();
+//        List<Member> members = findTeam.getMembers();
+//
+//        System.out.println("===============================================");
+//        for (Member m : members) {
+//            System.out.println("m.getUsername() = " + m.getUsername());
+//        }
+
         tx.commit();
     } catch(Exception e) {
         System.out.println("여기로");
