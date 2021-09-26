@@ -47,7 +47,9 @@ import org.hibernate.annotations.Generated;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 // @Table => 여기에서 unique 제약조건을 주는 것이 바람직하다
@@ -59,7 +61,7 @@ import java.util.Date;
 //        pkColumnValue = "MEMBER_SEQ", allocationSize = 1)
 
 
-//@Entity
+@Entity
 public class Member {
 //    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "member_seq_generator") //SEQUENCE(ORACLE),
 //    @GeneratedValue(strategy = GenerationType.TABLE,
@@ -84,23 +86,12 @@ public class Member {
     @Column//, nullable = true)// columnDefinition = "varchar(100) default 'EMPTY'"
     private String username;
 
-//    @Column(name = "team_id")
-//    private Long temaId;
+    @OneToOne
+    @JoinColumn(name = "locker_id")
+    private Locker locker;
 
-    @ManyToOne//(fetch = FetchType.LAZY) // 지연로딩전략
-    @JoinColumn(name = "team_id") // 외래키가 있는 곳을 연관관계의 주인으로 정한다.
-    private Team team;
-
-    public Member(){}
-
-    public Team getTeam() {
-        return team;
-    }
-
-    public void changeTeam(Team team) {
-        this.team = team;
-        team.getMembers().add(this);
-    }
+    @OneToMany(mappedBy = "member")
+    private List<MemberProduct> memberProducts = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -117,6 +108,23 @@ public class Member {
     public void setUsername(String username) {
         this.username = username;
     }
+
+    public Member(){}
+//    @Column(name = "team_id")
+//    private Long temaId;
+
+//    @ManyToOne//(fetch = FetchType.LAZY) // 지연로딩전략
+//    @JoinColumn(name = "team_id") // 외래키가 있는 곳을 연관관계의 주인으로 정한다.
+//    private Team team;
+
+//    public Team getTeam() {
+//        return team;
+//    }
+//
+//    public void changeTeam(Team team) {
+//        this.team = team;
+//        team.getMembers().add(this);
+//    }
 
 //    public Long getTemaId() {
 //        return temaId;

@@ -99,21 +99,21 @@ public class JpaMain {
         // 저장
 
 
-        Team team = new Team();
-        team.setName("TeamA");
-        //team.getMembers().add(member);
-        em.persist(team);
-
-        Member member = new Member();
-        member.setUsername("member1");
-        member.changeTeam(team);
-        em.persist(member);
-
-//        team.getMembers().add(member);  -->> 이를 연관관계 편의 메서드로 바꿔주자
-
-        em.flush();
-        em.clear();
-
+//        Team team = new Team();
+//        team.setName("TeamA");
+//        //team.getMembers().add(member);
+//        em.persist(team);
+//
+//        Member member = new Member();
+//        member.setUsername("member1");
+////        member.changeTeam(team);
+//        em.persist(member);
+//
+////        team.getMembers().add(member);  -->> 이를 연관관계 편의 메서드로 바꿔주자
+//
+//        em.flush();
+//        em.clear();
+//
 
 //        // 찾기
 //        Member findmember = em.find(Member.class, member.getId());
