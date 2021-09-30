@@ -1,7 +1,6 @@
 package jpabook.jpashop;
 
-import jpabook.jpashop.domain.Order;
-import jpabook.jpashop.domain.OrderItem;
+import jpabook.jpashop.domain.*;
 
 import javax.management.OperationsException;
 import javax.persistence.EntityManager;
@@ -22,17 +21,41 @@ public class JpaMain {
         tx.begin();
         try{
 
-            Order order = new Order();
-//            order.addOrderItem(new OrderItem());
-            em.persist(order);
+//            Order order = new Order();
+////            order.addOrderItem(new OrderItem());
+//            em.persist(order);
+//
+//            OrderItem orderItem = new OrderItem();
+//            orderItem.setOrder(order);
+//
+//            em.persist(orderItem);
+//
+//            Order order = new Order();
+//            em.persist(order);
+//
+//            Delivery delivery = new Delivery();
+//            delivery.setOrder(order);
+//            em.persist(delivery);
+//
+////            Order order2 = new Order();
+////            em.persist(order2);
+//
+//            Delivery delivery2 = new Delivery();
+////            delivery2.setOrder(order2);
+//
+//            em.persist(delivery2);
+//
 
-            OrderItem orderItem = new OrderItem();
-            orderItem.setOrder(order);
+//            System.out.println("delivery2.getOrder().getId() = " + delivery2.getOrder().getId());
 
-            em.persist(orderItem);
+
+            Movie movie = new Movie();
+            movie.setDirector("director");
+            em.persist(movie);
 
 
             tx.commit();
+
         } catch(Exception e) {
             System.out.println("여기로");
             tx.rollback();

@@ -5,6 +5,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class JpaMain {
@@ -124,8 +125,43 @@ public class JpaMain {
 //        for (Member m : members) {
 //            System.out.println("m.getUsername() = " + m.getUsername());
 //        }
+//
+//        Movie movie = new Movie();
+//        movie.setActor("영화배우");
+//        movie.setDirector("감독");
+//        movie.setPrice(10000);
+//        movie.setName("영화제목");
+//        em.persist(movie);
+
+//        Movie findMovie = em.find(Movie.class, movie.getId());
+
+
+        Member member = new Member();
+        member.setUsername("user");
+        member.setCreatedBy("kim");
+        member.setCreatedDate(LocalDateTime.now());
+
+        em.persist(member);
+
+        em.flush();
+        em.clear();
+
+//        System.out.println("---------------------------------------------");
+//        System.out.println("findMovie = " + findMovie);;
+//        Book book = new Book();
+//        em.persist(book);
+//
+//        Movie movie2 = new Movie();
+//        movie2.setActor("영화배우2");
+//        movie2.setDirector("감독2");
+//        movie2.setPrice(100002);
+//        movie2.setName("영화제목2");
+//
+//
+//        em.persist(movie2);
 
         tx.commit();
+
     } catch(Exception e) {
         System.out.println("여기로");
         tx.rollback();

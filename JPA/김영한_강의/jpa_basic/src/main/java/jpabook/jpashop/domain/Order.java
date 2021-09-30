@@ -4,11 +4,13 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-//@Entity
+@Entity
 @Table(name = "ORDERS")
-public class Order {
+public class Order extends BaseEntity{
 
-    @Id @GeneratedValue
+//    public Order(){}
+
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id")
     private Long id;
 
@@ -26,6 +28,9 @@ public class Order {
 
     @OneToMany(mappedBy = "order")
     private List<OrderItem> orderItems;
+
+    @OneToOne(mappedBy = "order")
+    private Delivery delivery;
 
     public Member getMember() {
         return member;

@@ -61,8 +61,8 @@ import java.util.List;
 //        pkColumnValue = "MEMBER_SEQ", allocationSize = 1)
 
 
-@Entity
-public class Member {
+//@Entity
+public class Member extends BaseEntity{
 //    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "member_seq_generator") //SEQUENCE(ORACLE),
 //    @GeneratedValue(strategy = GenerationType.TABLE,
 //    generator = "MEMBER_SEQ_GENERATOR")
@@ -92,6 +92,7 @@ public class Member {
 
     @OneToMany(mappedBy = "member")
     private List<MemberProduct> memberProducts = new ArrayList<>();
+
 
     public Long getId() {
         return id;
