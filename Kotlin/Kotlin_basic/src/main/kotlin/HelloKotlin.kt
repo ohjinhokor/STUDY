@@ -97,5 +97,57 @@ fun main() {
 //    var result = ++a
 //    var result2 = b++
 //    println("$result , $result2")
-    
+
+    // 7. 함수
+//    fun sum(a : Int, b : Int): Int{
+//        return a+b
+//    }
+//    fun sum2(a : Int, b : Int): Int = a+b
+//    fun sum3(a : Int, b : Int) = a+b
+//    val sum = sum(1,2)
+//    val sum2 = sum2(3,4)
+//    val sum3 = sum3(5,6)
+//
+//    println("$sum, $sum2, $sum3")
+
+//    val maxnum = max(3,6)
+//    println(maxnum)
+//    outfunc("print this")
+//    outfunc2("print this2")
+
+//    normalVarargs(1,2,3,4,5)
+
+    // 8. 함수형 프로그래밍 기초
+
+    val result = highFunc(1,3){x, y ->
+        x+y
+    }
+    println(result)
+}
+
+// 7의 함수에서 사용한 함수들
+//    fun sum(a : Int, b : Int): Int{
+//        return a+b
+//    }
+//    fun sum2(a : Int, b : Int): Int = a+b
+//    fun sum3(a : Int, b : Int) = a+b
+
+//fun max(a : Int, b : Int): Int{
+//    return if (a>b) a else b
+//}
+//fun outfunc(a : String): Unit{
+//    println(a)
+//}
+//fun outfunc2(a: String) = println(a)
+
+//fun normalVarargs(vararg a : Int){
+//    for(num in a){
+//        println(num)
+//    }
+//}
+
+
+// 8(함수형 프로그래밍)에서 사용
+fun highFunc(a : Int, b : Int, sum : (Int, Int) -> Int, ) : Int {
+    return sum(a,b)
 }
