@@ -82,6 +82,7 @@ fun main() {
 //    println(c===d)
 //    println(e===f)
 //    println(a===f)
+//    println(b===f)
 
 //    var ex1 : Any = 3
 //    ex1 = 50L
@@ -119,11 +120,77 @@ fun main() {
 
     // 8. 함수형 프로그래밍 기초
 
-    val result = highFunc(1,3){x, y ->
-        x+y
-    }
-    println(result)
+//    val result = highFunc(1,3){x, y ->
+//        x+y
+//    }
+//    println(result)
+
+    // 9. 람다식
+//    val result: Int
+//    val multi1 = {a:Int, b:Int -> a+b}
+//    val multi2: (a: Int, b: Int) -> Int = {a,b->
+//        println("a : ${a}, b: ${b}")
+//        a+b
+//    }
+//
+//    // 람다식이 할당 된 변수는 함수처럼 사용 가능
+//    result = multi2(10,20)
+//    println(result)
+//
+//    val nestedLambda: ()->()->Unit = {{println("nestedLambda")}}
+
+
+    // 10. 고차함수
+
+//    val result = sum(10, 10)
+//    val result2 = mul(sum(10,5), 10)
+//
+//    val result3 = funcFunc(20,30)
+//
+//    println("$result, $result2 $result3")
+//
+//    val result4 = callByValue(lambda())
+//    println(result4 )
+
+//    val result = callByName(otherlambda)
+//    println(result)
+//
+//    funcParam(3,2,::sum)
+
+    // 11. 람다식의 여러가지 유형
+//    noParam { "Hello" }
+//    oneParam { "Hello! $it" }
+//    moreParam{a,b -> "Hello world! $a $b"}
+//    moreParam{_,b -> "Hello World $b"}
+
+//    withArgs("Arg1", "Arg2",{ a ,b -> "Hello World! $a, $b"})
+//    withArgs("Arg1", "Arg2"){a,b ->
+//        "Hello World! $a, $b"
+//    }
+
+//    twoLambda({a,b->"First $a, $b"}, {"Second $it"})
+
+    // 12. 다양한 함수의 유형
+//    shortFunc(3, {a ->println("a: $a")})
+//inline 함수
+//    shortFunc(3){println("a: $it")}
+//    shortFunc2(4){println("a: $it")}
+
+// 중위 표현 법
+//    val multi = 3 multiply 10
+//    println(multi)
+//
+//
+//    val str = 3 strPlus "can we do this?"
+//    println(str)
+
+
+// 재귀 함수
+    val number =5
+    println(factorial(number))
 }
+
+
 
 // 7의 함수에서 사용한 함수들
 //    fun sum(a : Int, b : Int): Int{
@@ -148,6 +215,85 @@ fun main() {
 
 
 // 8(함수형 프로그래밍)에서 사용
-fun highFunc(a : Int, b : Int, sum : (Int, Int) -> Int, ) : Int {
-    return sum(a,b)
+//fun highFunc(a : Int, b : Int, sum : (Int, Int) -> Int, ) : Int {
+//    return sum(a,b)
+//}
+
+// 10 고차함수에서 사용
+//fun sum(a:Int, b:Int): Int{
+//    return a+b
+//}
+//fun sum(a:Int, b:Int) = a+b
+//
+//fun mul(a:Int, b:Int): Int{
+//    return a*b
+//}
+//
+//fun funcFunc(a: Int, b: Int) = sum(a,b)
+//
+//fun callByValue(b:Boolean):Boolean{
+//    println("callByValue function")
+//    return b
+//}
+//
+//val lambda:()->Boolean ={
+//    println("lambda function")
+//    true
+//}
+
+//fun callByName(b : ()->Boolean): Boolean{
+//    println("callByName function")
+//    return b()
+//}
+//
+//val otherlambda: ()->Boolean={
+//    println("otherLambda function")
+//    true
+//}
+
+//fun sum(x : Int, y : Int): Int = x+y
+//fun funcParam(a : Int, b : Int, c:(Int,Int)->Int): Int{
+//    return c(a,b)
+//}
+
+//fun noParam(out: () -> String) = println(out())
+//fun oneParam(out: (String) -> String){
+//    println(out("OneParam"))
+//}
+//fun moreParam(out: (String, String) -> String){
+//    println(out("OneParam", "TwoParam"))
+//}
+
+//fun withArgs(a: String, b: String, out:(String, String) -> String){
+//    println(out(a,b))
+//}
+
+//fun twoLambda(first: (String, String) -> String, second:(String)->String){
+//    println(first("OneParam", "TwoParam"))
+//    println(second("OneParam"))
+//}
+
+
+// 12 다양한 함수에서 사용
+//inline fun shortFunc(a: Int, out: (Int) -> Unit){
+//    println("Hello")
+//    out(a)
+//}
+//inline fun shortFunc2(a: Int, noinline out: (Int) -> Unit){
+//    println("Hello")
+//    out(a)
+//}
+
+// 중위 표현 법
+//infix fun Int.multiply(x: Int): Int{
+//    return this * x
+//}
+//
+//infix fun Int.strPlus(x: String): String{
+//    return "$x version $this"
+//}
+
+// 재귀 함수
+tailrec fun factorial(n: Int, run: Int=1): Long{
+    return if(n==1) run.toLong() else n*factorial(n-1)
 }
