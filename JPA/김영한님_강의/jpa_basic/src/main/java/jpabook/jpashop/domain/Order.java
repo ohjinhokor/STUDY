@@ -4,8 +4,8 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Entity
-@Table(name = "ORDERS")
+//@Entity
+//@Table(name = "ORDERS")
 public class Order extends BaseEntity{
 
 //    public Order(){}

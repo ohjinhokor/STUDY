@@ -51,6 +51,8 @@ public class JpaMain {
 
             Movie movie = new Movie();
             movie.setDirector("director");
+            movie.setActor("bbb");
+            movie.setName("바람과 함께");
             em.persist(movie);
 
 
