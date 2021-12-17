@@ -1,5 +1,7 @@
 package hellojpa;
 
+import jdk.vm.ci.meta.Local;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -166,6 +168,11 @@ public class JpaMain {
         book.setAuthor("책 저자");
 
         em.persist(book);
+
+        //MappedSuperClass의 함수와 변수 사용 예시
+        Member member = new Member();
+        member.setUsername("유저 이름");
+        member.setCreatedDate(LocalDateTime.now());
 
         em.flush();
         em.clear();
