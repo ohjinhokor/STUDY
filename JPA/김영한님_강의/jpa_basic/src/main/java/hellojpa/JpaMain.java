@@ -1,7 +1,5 @@
 package hellojpa;
 
-import jdk.vm.ci.meta.Local;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -153,31 +151,55 @@ public class JpaMain {
 //        Book book = new Book();
 //        em.persist(book);
 //
-        Movie movie2 = new Movie();
-        movie2.setActor("영화배우2");
-        movie2.setDirector("감독2");
-        movie2.setPrice(100002);
-        movie2.setName("영화제목2");
 
-        em.persist(movie2);
+        //고급 매핑
+//        Movie movie2 = new Movie();
+//        movie2.setActor("영화배우2");
+//        movie2.setDirector("감독2");
+//        movie2.setPrice(100002);
+//        movie2.setName("영화제목2");
+//
+//        em.persist(movie2);
+//
+//        Book book = new Book();
+//        book.setName("책 제목");
+//        book.setPrice(100000);
+//        book.setIsbn("ISBN");
+//        book.setAuthor("책 저자");
+//
+//        em.persist(book);
+//
+//        //MappedSuperClass의 함수와 변수 사용 예시
+//        Member member = new Member();
+//        member.setUsername("유저 이름");
+//        member.setCreatedDate(LocalDateTime.now());
+//
+//        em.flush();
+//        em.clear();
 
-        Book book = new Book();
-        book.setName("책 제목");
-        book.setPrice(100000);
-        book.setIsbn("ISBN");
-        book.setAuthor("책 저자");
+        Member member1 = new Member();
+        member1.setUsername("멤버 이름");
 
-        em.persist(book);
-
-        //MappedSuperClass의 함수와 변수 사용 예시
-        Member member = new Member();
-        member.setUsername("유저 이름");
-        member.setCreatedDate(LocalDateTime.now());
-
+        em.persist(member1);
         em.flush();
         em.clear();
 
 
+//        Member member = em.find(Member.class, 1L);
+
+        // select 쿼리를 날리지 않고 member객체를 받아옴, 가짜 엔티티라고 생각하면 됨.(프록시)
+        Member member = em.getReference(Member.class, member1.getId());
+
+
+        //이 때 쿼리를 날림. 기존에 객체만 가져올 때는 쿼리를 날리지 않다가 username처럼 db를 이용해서 알 수 있는 데이터가 필요할 때 쿼리를 날림
+        System.out.println("select 쿼리 시작");
+        System.out.println("findmember = " + member.getUsername());
+        // 쿼리를 날린 이후 프록시는 엔티티를 targeting한다.
+
+
+//        printMemberAndTeam(member);
+
+        printMember(member);
         tx.commit();
 
     } catch(Exception e) {
@@ -188,5 +210,19 @@ public class JpaMain {
             em.close();
         }
         emf.close();
+    }
+
+    private static void printMember(Member member) {
+        System.out.println("member = " + member.getUsername());
+    }
+
+    private static void printMemberAndTeam(Member member){
+        String username = member.getUsername();
+        System.out.println("username = " + username);
+
+        Team team = member.getTeam();
+        System.out.println("team = " + team.getName());
+
+
     }
 }

@@ -45,6 +45,7 @@ package hellojpa;
 import org.hibernate.annotations.Generated;
 
 import javax.persistence.*;
+import javax.persistence.criteria.Join;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ import java.util.List;
 //        pkColumnValue = "MEMBER_SEQ", allocationSize = 1)
 
 
-//@Entity
+@Entity
 public class Member extends BaseEntity{
 //    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "member_seq_generator") //SEQUENCE(ORACLE),
 //    @GeneratedValue(strategy = GenerationType.TABLE,
@@ -93,6 +94,9 @@ public class Member extends BaseEntity{
     @OneToMany(mappedBy = "member")
     private List<MemberProduct> memberProducts = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn(name = "TEAM_ID", insertable = false, updatable = false)
+    private Team team;
 
     public Long getId() {
         return id;
@@ -118,9 +122,12 @@ public class Member extends BaseEntity{
 //    @JoinColumn(name = "team_id") // 외래키가 있는 곳을 연관관계의 주인으로 정한다.
 //    private Team team;
 
-//    public Team getTeam() {
-//        return team;
-//    }
+    public Team getTeam() {
+        return team;
+    }
+    public void setTeam(Team team){
+        this.team = team;
+    }
 //
 //    public void changeTeam(Team team) {
 //        this.team = team;
