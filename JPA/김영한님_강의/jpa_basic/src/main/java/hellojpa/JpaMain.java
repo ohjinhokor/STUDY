@@ -203,33 +203,33 @@ public class JpaMain {
 //
 //        printMember(member);
 
-//         프록시와 연관관계 관리 - 즉시 로딩과 지연 로딩
-//        (fetchType.Lazy)
-        Team team = new Team();
-        team.setName("teamA");
-        em.persist(team);
-
-        Member member1 = new Member();
-        member1.setUsername("member1");
-        member1.setTeam(team);
-        em.persist(member1);
-
-
-        em.flush();
-        em.clear();
-
-        Member m = em.find(Member.class, member1.getId());
-        System.out.println("여기까지는 member만 select함 team은 프록시임");
-
-        // 여기서 team에 select 쿼리를 날림
-        m.getTeam().getName();
-
-
-        // 이런식으로 페치 조인을 사용하면 team까지 한 번에 select 할 수 있다
-        List<Member> resultList = em.createQuery("select m from Member m join fetch m.team", Member.class)
-                .getResultList();
-
-        tx.commit();
+////         프록시와 연관관계 관리 - 즉시 로딩과 지연 로딩
+////        (fetchType.Lazy)
+//        Team team = new Team();
+//        team.setName("teamA");
+//        em.persist(team);
+//
+//        Member member1 = new Member();
+//        member1.setUsername("member1");
+//        member1.setTeam(team);
+//        em.persist(member1);
+//
+//
+//        em.flush();
+//        em.clear();
+//
+//        Member m = em.find(Member.class, member1.getId());
+//        System.out.println("여기까지는 member만 select함 team은 프록시임");
+//
+//        // 여기서 team에 select 쿼리를 날림
+//        m.getTeam().getName();
+//
+//
+//        // 이런식으로 페치 조인을 사용하면 team까지 한 번에 select 할 수 있다
+//        List<Member> resultList = em.createQuery("select m from Member m join fetch m.team", Member.class)
+//                .getResultList();
+//
+//        tx.commit();
 
 
 //        //(fetchType.EAGER) 그러나 실무에서 즉시 로딩은 사용하지 않는다.
@@ -258,6 +258,38 @@ public class JpaMain {
 //
 //        tx.commit();
 
+
+        // 프록시와 연관관계 관리 - 영속성전이(CASCADE)
+        // 즉시 로딩, 지연 로딩, 연관관계 세팅과 전혀 관계 없음 - 헷갈리기 쉬움
+
+        Child child1 = new Child();
+        Child child2 = new Child();
+
+        Parent parent = new Parent();
+        parent.addChild(child1);
+        parent.addChild(child2);
+
+        // persist를 3번 하게됨.
+        // parent를 persist하면 child도 한 번에 persist되도록 하기 위해 영속성전이를 사용함
+        // 그러나 parent 클래스의 childList에 CasecadeType.ALL이나 CasecadeType.PERSIST를 추가하면 child까지 한 번에 persist됨
+        em.persist(parent);
+//        em.persist(child1);
+//        em.persist(child2);
+
+
+        // 프록시와 연관관계 관리 - 고아 객체
+        // 부모 클래스에 orphanRemoval = true로 해두면 자식 객체와 부모객체의 관계가 끊어졌을 때 자식 객체를 데이터베이스에서 자동으로  삭제함
+        em.flush();
+        em.clear();
+
+        Parent findParent = em.find(Parent.class, parent.getId());
+        findParent.getChildList().remove(0); // 자식 객체가 데이터베이스에서 삭제됨
+
+        em.remove(parent); // parent와 관계있는 자식 객체가 모두 지워짐
+
+
+        tx.commit();
+
     } catch(Exception e) {
         System.out.println("여기로");
         tx.rollback();
@@ -267,6 +299,7 @@ public class JpaMain {
         }
         emf.close();
     }
+
 
 //    private static void printMember(Member member) {
 //        System.out.println("member = " + member.getUsername());
