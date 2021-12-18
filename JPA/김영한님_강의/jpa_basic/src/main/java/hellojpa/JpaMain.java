@@ -259,35 +259,45 @@ public class JpaMain {
 //        tx.commit();
 
 
-        // 프록시와 연관관계 관리 - 영속성전이(CASCADE)
-        // 즉시 로딩, 지연 로딩, 연관관계 세팅과 전혀 관계 없음 - 헷갈리기 쉬움
-
-        Child child1 = new Child();
-        Child child2 = new Child();
-
-        Parent parent = new Parent();
-        parent.addChild(child1);
-        parent.addChild(child2);
-
-        // persist를 3번 하게됨.
-        // parent를 persist하면 child도 한 번에 persist되도록 하기 위해 영속성전이를 사용함
-        // 그러나 parent 클래스의 childList에 CasecadeType.ALL이나 CasecadeType.PERSIST를 추가하면 child까지 한 번에 persist됨
-        em.persist(parent);
+//        // 프록시와 연관관계 관리 - 영속성전이(CASCADE)
+//        // 즉시 로딩, 지연 로딩, 연관관계 세팅과 전혀 관계 없음 - 헷갈리기 쉬움
+//
+//        Child child1 = new Child();
+//        Child child2 = new Child();
+//
+//        Parent parent = new Parent();
+//        parent.addChild(child1);
+//        parent.addChild(child2);
+//
+//        // persist를 3번 하게됨.
+//        // parent를 persist하면 child도 한 번에 persist되도록 하기 위해 영속성전이를 사용함
+//        // 그러나 parent 클래스의 childList에 CasecadeType.ALL이나 CasecadeType.PERSIST를 추가하면 child까지 한 번에 persist됨
+//        em.persist(parent);
 //        em.persist(child1);
 //        em.persist(child2);
+//
+//
+//        // 프록시와 연관관계 관리 - 고아 객체
+//        // 부모 클래스에 orphanRemoval = true로 해두면 자식 객체와 부모객체의 관계가 끊어졌을 때 자식 객체를 데이터베이스에서 자동으로  삭제함
+//        em.flush();
+//        em.clear();
+//
+//        Parent findParent = em.find(Parent.class, parent.getId());
+//        findParent.getChildList().remove(0); // 자식 객체가 데이터베이스에서 삭제됨
+//
+//        em.remove(parent); // parent와 관계있는 자식 객체가 모두 지워짐
+//
+//
+//        tx.commit();
 
+        //값 타입 - 임베디드 타입
+        // 클래스 타입을 필드 값으로 가질 수 있음
+        Member2 member = new Member2();
+        member.setUsername("유저 이름");
+        member.setHomeAddress(new Address("city1", "street2", "zipcode3"));
+        member.setWorkPeriod(new Period());
 
-        // 프록시와 연관관계 관리 - 고아 객체
-        // 부모 클래스에 orphanRemoval = true로 해두면 자식 객체와 부모객체의 관계가 끊어졌을 때 자식 객체를 데이터베이스에서 자동으로  삭제함
-        em.flush();
-        em.clear();
-
-        Parent findParent = em.find(Parent.class, parent.getId());
-        findParent.getChildList().remove(0); // 자식 객체가 데이터베이스에서 삭제됨
-
-        em.remove(parent); // parent와 관계있는 자식 객체가 모두 지워짐
-
-
+        em.persist(member);
         tx.commit();
 
     } catch(Exception e) {
