@@ -17,11 +17,13 @@ public class Address {
         this.zipcode = zipcode;
     }
 
+
+    // 공유참조를 피하기 위해서 불변 객체로 만들었음. 모든 set함수를 private으로 만들어서 외부에서 변경할 수 없게 함
     public String getCity() {
         return city;
     }
 
-    public void setCity(String city) {
+    private void setCity(String city) {
         this.city = city;
     }
 
@@ -29,7 +31,7 @@ public class Address {
         return street;
     }
 
-    public void setStreet(String street) {
+    private void setStreet(String street) {
         this.street = street;
     }
 
@@ -37,7 +39,7 @@ public class Address {
         return zipcode;
     }
 
-    public void setZipcode(String zipcode) {
+    private void setZipcode(String zipcode) {
         this.zipcode = zipcode;
     }
 }

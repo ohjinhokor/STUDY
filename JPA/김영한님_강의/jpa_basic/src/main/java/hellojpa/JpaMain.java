@@ -290,15 +290,58 @@ public class JpaMain {
 //
 //        tx.commit();
 
-        //값 타입 - 임베디드 타입
-        // 클래스 타입을 필드 값으로 가질 수 있음
-        Member2 member = new Member2();
-        member.setUsername("유저 이름");
-        member.setHomeAddress(new Address("city1", "street2", "zipcode3"));
-        member.setWorkPeriod(new Period());
+//        //값 타입 - 임베디드 타입
+//        // 클래스 타입을 필드 값으로 가질 수 있음
+//        Member2 member = new Member2();
+//        member.setUsername("유저 이름");
+//        member.setHomeAddress(new Address("city1", "street2", "zipcode3"));
+//        member.setWorkPeriod(new Period());
+//
+//        em.persist(member);
 
-        em.persist(member);
+        //값 타입 - 값 타입과 불변 객체 -> 하면 안되는 방법
+//        Address address = new Address("city1", "street2", "zipcode3");
+//
+//        Member2 member1 = new Member2();
+//        member1.setUsername("member1");
+//        member1.setHomeAddress(address);
+//        em.persist(member1);
+//
+//        Member2 member2 = new Member2();
+//        member2.setUsername("member2");
+//        member2.setHomeAddress(address);
+//        em.persist(member2);
+//
+//        // member1의 city만 바꿨다고 생각했는데 member2의 city까지 바뀌는 결과가 나타남
+//        // 같은 객체를 참조하기 때문이다.
+//        member1.getHomeAddress().setCity("newcity");
+
+
+        //값 타입 - 값 타입과 불변 객체 -> 올바른 방법
+        Address address = new Address("city1", "street2", "zipcode3");
+
+        Member2 member1 = new Member2();
+        member1.setUsername("member1");
+        member1.setHomeAddress(address);
+        em.persist(member1);
+
+        Address copyAddress = new Address(address.getCity(), address.getStreet(), address.getZipcode());
+        Member2 member2 = new Member2();
+        member2.setUsername("member2");
+        member2.setHomeAddress(copyAddress);
+        em.persist(member2);
+
+        // 이렇게 하면 공유참조를 막을 수 있지만 실수가 나올 확률이 너무 크다 -> 문제의 해결이 필요함(불변 객체를 사용함)
+        // 불변 객체를 사용하기 위해서 생성 시에(생성자에) 값을 할당하게 하고, set함수를 만들지 않으면 된다.
+//        member1.getHomeAddress().setCity("newCity");
+
+
+        // set함수를 private했기 때문에 객체안의 필드 값을 바꾸고 싶다면 객체를 완전히 새로 만들어야 함
+        Address newAddress = new Address("Newcity", address.getStreet(), address.getZipcode());
+        member1.setHomeAddress(newAddress);
+
         tx.commit();
+
 
     } catch(Exception e) {
         System.out.println("여기로");
