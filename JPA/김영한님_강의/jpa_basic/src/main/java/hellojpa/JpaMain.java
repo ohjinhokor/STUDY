@@ -330,15 +330,20 @@ public class JpaMain {
         member2.setUsername("member2");
         member2.setHomeAddress(copyAddress);
         em.persist(member2);
+//
+//        // 이렇게 하면 공유참조를 막을 수 있지만 실수가 나올 확률이 너무 크다 -> 문제의 해결이 필요함(불변 객체를 사용함)
+//        // 불변 객체를 사용하기 위해서 생성 시에(생성자에) 값을 할당하게 하고, set함수를 만들지 않으면 된다.
+////        member1.getHomeAddress().setCity("newCity");
+//
+//
+//        // set함수를 private했기 때문에 객체안의 필드 값을 바꾸고 싶다면 객체를 완전히 새로 만들어야 함
+//        Address newAddress = new Address("Newcity", address.getStreet(), address.getZipcode());
+//        member1.setHomeAddress(newAddress);
 
-        // 이렇게 하면 공유참조를 막을 수 있지만 실수가 나올 확률이 너무 크다 -> 문제의 해결이 필요함(불변 객체를 사용함)
-        // 불변 객체를 사용하기 위해서 생성 시에(생성자에) 값을 할당하게 하고, set함수를 만들지 않으면 된다.
-//        member1.getHomeAddress().setCity("newCity");
 
+        // 값 타입 - 값 타입의 비교
+        System.out.println("\n address.equals(copyAddress) : "+address.equals(copyAddress));
 
-        // set함수를 private했기 때문에 객체안의 필드 값을 바꾸고 싶다면 객체를 완전히 새로 만들어야 함
-        Address newAddress = new Address("Newcity", address.getStreet(), address.getZipcode());
-        member1.setHomeAddress(newAddress);
 
         tx.commit();
 
