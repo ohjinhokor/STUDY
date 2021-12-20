@@ -7,6 +7,7 @@ import javax.persistence.Persistence;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 public class JpaMain {
 
@@ -317,19 +318,19 @@ public class JpaMain {
 //        member1.getHomeAddress().setCity("newcity");
 
 
-        //값 타입 - 값 타입과 불변 객체 -> 올바른 방법
-        Address address = new Address("city1", "street2", "zipcode3");
-
-        Member2 member1 = new Member2();
-        member1.setUsername("member1");
-        member1.setHomeAddress(address);
-        em.persist(member1);
-
-        Address copyAddress = new Address(address.getCity(), address.getStreet(), address.getZipcode());
-        Member2 member2 = new Member2();
-        member2.setUsername("member2");
-        member2.setHomeAddress(copyAddress);
-        em.persist(member2);
+//        //값 타입 - 값 타입과 불변 객체 -> 올바른 방법
+//        Address address = new Address("city1", "street2", "zipcode3");
+//
+//        Member2 member1 = new Member2();
+//        member1.setUsername("member1");
+//        member1.setHomeAddress(address);
+//        em.persist(member1);
+//
+//        Address copyAddress = new Address(address.getCity(), address.getStreet(), address.getZipcode());
+//        Member2 member2 = new Member2();
+//        member2.setUsername("member2");
+//        member2.setHomeAddress(copyAddress);
+//        em.persist(member2);
 //
 //        // 이렇게 하면 공유참조를 막을 수 있지만 실수가 나올 확률이 너무 크다 -> 문제의 해결이 필요함(불변 객체를 사용함)
 //        // 불변 객체를 사용하기 위해서 생성 시에(생성자에) 값을 할당하게 하고, set함수를 만들지 않으면 된다.
@@ -341,9 +342,60 @@ public class JpaMain {
 //        member1.setHomeAddress(newAddress);
 
 
-        // 값 타입 - 값 타입의 비교
-        System.out.println("\n address.equals(copyAddress) : "+address.equals(copyAddress));
+//        // 값 타입 - 값 타입의 비교
+//        System.out.println("\n address.equals(copyAddress) : "+address.equals(copyAddress));
 
+        //값 타입 - 값 타입 컬렉션
+        Member2 member = new Member2();
+        member.setUsername("member1");
+        member.setHomeAddress(new Address("city1", "street2", "zipcode3"));
+
+        member.getFavoriteFoods().add("치킨");
+        member.getFavoriteFoods().add("족발");
+        member.getFavoriteFoods().add("피자");
+
+        member.getAddressHistory().add(new Address("oldCity", "oldStreet", "oldZipcode"));
+        member.getAddressHistory().add(new Address("oldCity2", "oldStreet2", "oldZipcode2"));
+
+        em.persist(member);
+
+        em.flush();
+        em.clear();
+
+        System.out.println("=======find Start=========");
+        // 값 타입 컬렉셕은 모두 지연로딩임을 로그에 나오는 쿼리를 통해 알 수 있음
+        Member2 findMember = em.find(Member2.class, member.getId());
+
+        //만약 findMember가 컬렉션을 사용한다면 그 때 쿼리를 발생시킴
+        System.out.println("==========getAddressHistory()===========");
+        List<Address> addressHistory = findMember.getAddressHistory();
+        for (Address address : addressHistory) {
+            System.out.println("address = " + address.getCity());
+        }
+        Set<String> favoriteFoods = findMember.getFavoriteFoods();
+        for (String favoriteFood : favoriteFoods) {
+            System.out.println("favoriteFood = "+favoriteFood);
+        }
+
+
+        // 값 타입 컬렉션 수정
+        // 값 타입을 변경하는 잘못된 예시 : findMember.getHomeAddress().setCity("newCity")
+        // 값 타입을 변경할 때는 객체를 완전히 새로 넣어야 함! 그래야 참조 공유 문제가 생기지 않음
+        Address a = findMember.getHomeAddress();
+        findMember.setHomeAddress(new Address("newCity", a.getStreet(), a.getZipcode()));
+
+        //set안에 있는 값 변경
+        findMember.getFavoriteFoods().remove("치킨");
+        findMember.getFavoriteFoods().add("한식");
+
+        // 이 때 Address가 지워지기 위해서는 Address간의 비교가 가능해야 한다. 따라서 equals 함수가 잘 구현되어 있어야 한다.
+        //이 부분의 sql을 보면 예상과는 다른 부분이 있다.
+        // 컬럼 하나만 지우고 하나를 추가할 것 같지만, 전체를 다 지우고 전체를 다시 추가하는 방식을 택한다.
+        // 결국 실무에서는     @ElementCollection, @CollectionTable를 거의 사용하지 않는다.
+        // !!!!!!!!!! 아래 한 문장이 중요!!!!!!!!!!!!
+        // 실무에서는 값 타입 컬렉션 대신에 일대다 관계를 이용하여 문제를 해결한다
+        findMember.getAddressHistory().remove(new Address("city1", "street2", "zipcode3"));
+        findMember.getAddressHistory().add(new Address("newCity1", "newStreet2", "newZipcode3"));
 
         tx.commit();
 
