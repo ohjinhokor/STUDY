@@ -354,8 +354,8 @@ public class JpaMain {
         member.getFavoriteFoods().add("족발");
         member.getFavoriteFoods().add("피자");
 
-        member.getAddressHistory().add(new Address("oldCity", "oldStreet", "oldZipcode"));
-        member.getAddressHistory().add(new Address("oldCity2", "oldStreet2", "oldZipcode2"));
+        member.getAddressHistory().add(new AddressEntity(new Address("oldCity", "oldStreet", "oldZipcode")));
+        member.getAddressHistory().add(new AddressEntity(new Address("oldCity2", "oldStreet2", "oldZipcode2")));
 
         em.persist(member);
 
@@ -367,15 +367,15 @@ public class JpaMain {
         Member2 findMember = em.find(Member2.class, member.getId());
 
         //만약 findMember가 컬렉션을 사용한다면 그 때 쿼리를 발생시킴
-        System.out.println("==========getAddressHistory()===========");
-        List<Address> addressHistory = findMember.getAddressHistory();
-        for (Address address : addressHistory) {
-            System.out.println("address = " + address.getCity());
-        }
-        Set<String> favoriteFoods = findMember.getFavoriteFoods();
-        for (String favoriteFood : favoriteFoods) {
-            System.out.println("favoriteFood = "+favoriteFood);
-        }
+//        System.out.println("==========getAddressHistory()===========");
+//        List<Address> addressHistory = findMember.getAddressHistory();
+//        for (Address address : addressHistory) {
+//            System.out.println("address = " + address.getCity());
+//        }
+//        Set<String> favoriteFoods = findMember.getFavoriteFoods();
+//        for (String favoriteFood : favoriteFoods) {
+//            System.out.println("favoriteFood = "+favoriteFood);
+//        }
 
 
         // 값 타입 컬렉션 수정
@@ -394,8 +394,8 @@ public class JpaMain {
         // 결국 실무에서는     @ElementCollection, @CollectionTable를 거의 사용하지 않는다.
         // !!!!!!!!!! 아래 한 문장이 중요!!!!!!!!!!!!
         // 실무에서는 값 타입 컬렉션 대신에 일대다 관계를 이용하여 문제를 해결한다
-        findMember.getAddressHistory().remove(new Address("city1", "street2", "zipcode3"));
-        findMember.getAddressHistory().add(new Address("newCity1", "newStreet2", "newZipcode3"));
+        findMember.getAddressHistory().remove(new AddressEntity(new Address("city1", "street2", "zipcode3")));
+        findMember.getAddressHistory().add(new AddressEntity(new Address("newCity1", "newStreet2", "newZipcode3")));
 
         tx.commit();
 

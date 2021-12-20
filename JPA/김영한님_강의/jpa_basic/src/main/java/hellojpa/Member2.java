@@ -35,11 +35,18 @@ public class Member2 extends BaseEntity {
     @Column(name = "FOOD_NAME") // 테이블 명이 아니라 column명이 FOOD_NAME임을 주의하자!
     private Set<String> favoriteFoods = new HashSet<>();
 
-    @ElementCollection
-    @CollectionTable(name = "ADDRESS", joinColumns =
-        @JoinColumn(name="MEMBER_ID")
-    )
-    private List<Address> addressHistory = new ArrayList<>();
+    // 이 부분을 일대다 관계로 풀어냄
+//    @ElementCollection
+//    @CollectionTable(name = "ADDRESS", joinColumns =
+//        @JoinColumn(name="MEMBER_ID")
+//    )
+//    private List<Address> addressHistory = new ArrayList<>();
+
+
+    //값 타입 컬렉션을 대체할 때는 일대다 단방향 매핑으로 만들어도 괜찮음
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name="MEMBER_ID")
+    private List<AddressEntity> addressHistory = new ArrayList<>();
 
     public Set<String> getFavoriteFoods() {
         return favoriteFoods;
@@ -49,12 +56,12 @@ public class Member2 extends BaseEntity {
         this.favoriteFoods = favoriteFoods;
     }
 
-    public List<Address> getAddressHistory() {
+    public List<AddressEntity> getAddressHistory() {
         return addressHistory;
     }
 
-    public void setAddressList(List<Address> addressList) {
-        this.addressHistory = addressList;
+    public void setAddressHistory(List<AddressEntity> addressHistory) {
+        this.addressHistory = addressHistory;
     }
 
     public Long getId() {
