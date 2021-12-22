@@ -4,6 +4,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -342,63 +345,92 @@ public class JpaMain {
 //        member1.setHomeAddress(newAddress);
 
 
-//        // 값 타입 - 값 타입의 비교
-//        System.out.println("\n address.equals(copyAddress) : "+address.equals(copyAddress));
+////        // 값 타입 - 값 타입의 비교
+////        System.out.println("\n address.equals(copyAddress) : "+address.equals(copyAddress));
+//
+//        //값 타입 - 값 타입 컬렉션
+//        Member2 member = new Member2();
+//        member.setUsername("member1");
+//        member.setHomeAddress(new Address("city1", "street2", "zipcode3"));
+//
+//        member.getFavoriteFoods().add("치킨");
+//        member.getFavoriteFoods().add("족발");
+//        member.getFavoriteFoods().add("피자");
+//
+//        member.getAddressHistory().add(new AddressEntity(new Address("oldCity", "oldStreet", "oldZipcode")));
+//        member.getAddressHistory().add(new AddressEntity(new Address("oldCity2", "oldStreet2", "oldZipcode2")));
+//
+//        em.persist(member);
+//
+//        em.flush();
+//        em.clear();
+//
+//        System.out.println("=======find Start=========");
+//        // 값 타입 컬렉셕은 모두 지연로딩임을 로그에 나오는 쿼리를 통해 알 수 있음
+//        Member2 findMember = em.find(Member2.class, member.getId());
+//
+//        //만약 findMember가 컬렉션을 사용한다면 그 때 쿼리를 발생시킴
+////        System.out.println("==========getAddressHistory()===========");
+////        List<Address> addressHistory = findMember.getAddressHistory();
+////        for (Address address : addressHistory) {
+////            System.out.println("address = " + address.getCity());
+////        }
+////        Set<String> favoriteFoods = findMember.getFavoriteFoods();
+////        for (String favoriteFood : favoriteFoods) {
+////            System.out.println("favoriteFood = "+favoriteFood);
+////        }
+//
+//
+//        // 값 타입 컬렉션 수정
+//        // 값 타입을 변경하는 잘못된 예시 : findMember.getHomeAddress().setCity("newCity")
+//        // 값 타입을 변경할 때는 객체를 완전히 새로 넣어야 함! 그래야 참조 공유 문제가 생기지 않음
+//        Address a = findMember.getHomeAddress();
+//        findMember.setHomeAddress(new Address("newCity", a.getStreet(), a.getZipcode()));
+//
+//        //set안에 있는 값 변경
+//        findMember.getFavoriteFoods().remove("치킨");
+//        findMember.getFavoriteFoods().add("한식");
+//
+//        // 이 때 Address가 지워지기 위해서는 Address간의 비교가 가능해야 한다. 따라서 equals 함수가 잘 구현되어 있어야 한다.
+//        //이 부분의 sql을 보면 예상과는 다른 부분이 있다.
+//        // 컬럼 하나만 지우고 하나를 추가할 것 같지만, 전체를 다 지우고 전체를 다시 추가하는 방식을 택한다.
+//        // 결국 실무에서는     @ElementCollection, @CollectionTable를 거의 사용하지 않는다.
+//        // !!!!!!!!!! 아래 한 문장이 중요!!!!!!!!!!!!
+//        // 실무에서는 값 타입 컬렉션 대신에 일대다 관계를 이용하여 문제를 해결한다
+//        findMember.getAddressHistory().remove(new AddressEntity(new Address("city1", "street2", "zipcode3")));
+//        findMember.getAddressHistory().add(new AddressEntity(new Address("newCity1", "newStreet2", "newZipcode3")));
 
-        //값 타입 - 값 타입 컬렉션
-        Member2 member = new Member2();
-        member.setUsername("member1");
-        member.setHomeAddress(new Address("city1", "street2", "zipcode3"));
-
-        member.getFavoriteFoods().add("치킨");
-        member.getFavoriteFoods().add("족발");
-        member.getFavoriteFoods().add("피자");
-
-        member.getAddressHistory().add(new AddressEntity(new Address("oldCity", "oldStreet", "oldZipcode")));
-        member.getAddressHistory().add(new AddressEntity(new Address("oldCity2", "oldStreet2", "oldZipcode2")));
-
-        em.persist(member);
-
-        em.flush();
-        em.clear();
-
-        System.out.println("=======find Start=========");
-        // 값 타입 컬렉셕은 모두 지연로딩임을 로그에 나오는 쿼리를 통해 알 수 있음
-        Member2 findMember = em.find(Member2.class, member.getId());
-
-        //만약 findMember가 컬렉션을 사용한다면 그 때 쿼리를 발생시킴
-//        System.out.println("==========getAddressHistory()===========");
-//        List<Address> addressHistory = findMember.getAddressHistory();
-//        for (Address address : addressHistory) {
-//            System.out.println("address = " + address.getCity());
+        //객체 지향 쿼리 언어1 - 기본문법 - 소개
+        // 테이블이 아닌 엔티티 객체를 대상으로 sql을 날린다는 점에서 차이가 있다.
+        // JPQL을 한 마디로 정의한다면 객체 지향 sql이다.
+//        List<Member2> resultList = em.createQuery("select m FROM Member2 m where m.username like '%kim%'", Member2.class)
+//                .getResultList();
+//
+//        for (Member2 member : resultList) {
+//            System.out.println("member = "+member);
 //        }
-//        Set<String> favoriteFoods = findMember.getFavoriteFoods();
-//        for (String favoriteFood : favoriteFoods) {
-//            System.out.println("favoriteFood = "+favoriteFood);
-//        }
+
+//        // JPQL의 동적쿼리를 보여주기 위한 코드(실무에서 사용 잘 안함 -> 대신 QueryDsl을 사용함)
+//        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+//        CriteriaQuery<Member2> query = criteriaBuilder.createQuery(Member2.class);
+//
+//        Root<Member2> m = query.from(Member2.class);
+//
+//        CriteriaQuery<Member2> cq = query.select(m).where(criteriaBuilder.equal(m.get("username"), "kim"));
+//
+//        List<Member2> resultList = em.createQuery(cq)
+//                .getResultList();
 
 
-        // 값 타입 컬렉션 수정
-        // 값 타입을 변경하는 잘못된 예시 : findMember.getHomeAddress().setCity("newCity")
-        // 값 타입을 변경할 때는 객체를 완전히 새로 넣어야 함! 그래야 참조 공유 문제가 생기지 않음
-        Address a = findMember.getHomeAddress();
-        findMember.setHomeAddress(new Address("newCity", a.getStreet(), a.getZipcode()));
+        // 네이티브 sql(JPA가 제공하는 sql을 직접 사용(특정 데이터베이스에 의존적임)
+        try{
+            em.createNativeQuery("select MEMBER_ID, city, street, zipcode, USERNAME from MEMBER")
+                    .getResultList();
+            tx.commit();
+        }
+        catch(Exception e){
 
-        //set안에 있는 값 변경
-        findMember.getFavoriteFoods().remove("치킨");
-        findMember.getFavoriteFoods().add("한식");
-
-        // 이 때 Address가 지워지기 위해서는 Address간의 비교가 가능해야 한다. 따라서 equals 함수가 잘 구현되어 있어야 한다.
-        //이 부분의 sql을 보면 예상과는 다른 부분이 있다.
-        // 컬럼 하나만 지우고 하나를 추가할 것 같지만, 전체를 다 지우고 전체를 다시 추가하는 방식을 택한다.
-        // 결국 실무에서는     @ElementCollection, @CollectionTable를 거의 사용하지 않는다.
-        // !!!!!!!!!! 아래 한 문장이 중요!!!!!!!!!!!!
-        // 실무에서는 값 타입 컬렉션 대신에 일대다 관계를 이용하여 문제를 해결한다
-        findMember.getAddressHistory().remove(new AddressEntity(new Address("city1", "street2", "zipcode3")));
-        findMember.getAddressHistory().add(new AddressEntity(new Address("newCity1", "newStreet2", "newZipcode3")));
-
-        tx.commit();
-
+        }
 
     } catch(Exception e) {
         System.out.println("여기로");
