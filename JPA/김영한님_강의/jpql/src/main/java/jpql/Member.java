@@ -1,4 +1,4 @@
-package com.example.jpql;
+package jpql;
 
 import javax.persistence.*;
 
@@ -7,9 +7,7 @@ public class Member {
 
     @Id @GeneratedValue
     private Long id;
-
     private String username;
-
     private int age;
 
     @ManyToOne
