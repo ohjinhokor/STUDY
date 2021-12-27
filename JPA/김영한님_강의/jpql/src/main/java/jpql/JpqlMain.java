@@ -14,11 +14,11 @@ public class JpqlMain {
 
         try{
 
-//            // 객체지향 쿼리 언어1 - 기본 문법 - 기본 문법과 쿼리 API
-            Member member = new Member();
-            member.setUsername("memberName");
-            member.setAge(10);
-            em.persist(member);
+////            // 객체지향 쿼리 언어1 - 기본 문법 - 기본 문법과 쿼리 API
+//            Member member = new Member();
+//            member.setUsername("memberName");
+//            member.setAge(10);
+//            em.persist(member);
 //
 //            // typedquery와 query의 사용 예시(엄청 중요한 내용은 아님)
 //            TypedQuery<Member> query = em.createQuery("select m from Member m", Member.class);
@@ -45,26 +45,47 @@ public class JpqlMain {
 
 
 
-            // 객체지향 쿼리 언어1 - 기본 문법 - 프로젝션
-            // 엔티티 프로젝션
-            // createQuery를 통해 꺼내온 엔티티는 영속성 컨텍스트에 의해서 관리됨
-            List<Team> result = em.createQuery("select m.team from Member m join m.team t", Team.class)
+//            // 객체지향 쿼리 언어1 - 기본 문법 - 프로젝션
+//            // 엔티티 프로젝션
+//            // createQuery를 통해 꺼내온 엔티티는 영속성 컨텍스트에 의해서 관리됨
+//            List<Team> result = em.createQuery("select m.team from Member m join m.team t", Team.class)
+//                    .getResultList();
+//
+//            // 임베디드 타입 프로젝션
+//            List<Address> addressResult = em.createQuery("select o.address from Order o", Address.class)
+//                    .getResultList();
+//
+//            // 스칼라 타입 프로젝션
+//            // 값을 빼올 때 DTO를 사용하여 값을 가져오는 것이 가장 현명한 방법이다.
+//
+//            List<MemberDTO> resultList = em.createQuery("select new jpql.MemberDTO(m.username, m.age) FROM Member m", MemberDTO.class)
+//                    .getResultList();
+//
+//            MemberDTO memberDTO = resultList.get(0);
+//            System.out.println("username = " + memberDTO.getUsername());
+//            System.out.println("age ="+ memberDTO.getAge());
+
+
+            // 객체지향 쿼리 언어1 - 기본 문법 - 페이징
+            for(int i=0; i<100; i++){
+                Member member = new Member();
+                member.setUsername("memberName"+i);
+                member.setAge(i);
+                em.persist(member);
+            }
+            em.flush();
+            em.clear();
+
+
+            List<Member> result = em.createQuery("select m from Member m order by m.age desc", Member.class)
+                    .setFirstResult(1)
+                    .setMaxResults(10)
                     .getResultList();
 
-            // 임베디드 타입 프로젝션
-            List<Address> addressResult = em.createQuery("select o.address from Order o", Address.class)
-                    .getResultList();
-
-            // 스칼라 타입 프로젝션
-            // 값을 빼올 때 DTO를 사용하여 값을 가져오는 것이 가장 현명한 방법이다.
-
-            List<MemberDTO> resultList = em.createQuery("select new jpql.MemberDTO(m.username, m.age) FROM Member m", MemberDTO.class)
-                    .getResultList();
-
-            MemberDTO memberDTO = resultList.get(0);
-            System.out.println("username = " + memberDTO.getUsername());
-            System.out.println("age ="+ memberDTO.getAge());
-
+            System.out.println("result.size = "+ result.size());
+            for (Member member : result) {
+                System.out.println("member.age = "+member.getAge());
+            }
 
             tx.commit();
         } catch(Exception e){
