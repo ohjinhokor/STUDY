@@ -3,6 +3,8 @@ package jpql;
 import javax.persistence.*;
 import java.util.List;
 
+import static jpql.MemberType.ADMIN;
+
 public class JpqlMain {
 
     public static void main(String[] args) {
@@ -88,7 +90,73 @@ public class JpqlMain {
 //            }
 
 
-            // 객체지향 쿼리 언어1 - 기본 문법 - 조인
+//            // 객체지향 쿼리 언어1 - 기본 문법 - 조인
+//
+//            Team team = new Team();
+//            team.setName("teamA");
+//            em.persist(team);
+//
+//            Member member = new Member();
+//            member.setUsername("memberName");
+//            member.setAge(10);
+//            member.setTeam(team);
+//            em.persist(member);
+//
+//
+//            Team team2 = new Team();
+//            team.setName("example");
+//            em.persist(team);
+//
+//            Member member2 = new Member();
+//            member.setUsername("example");
+//            member.setAge(10);
+//            member.setTeam(team);
+//            em.persist(member);
+//
+//            em.flush();
+//            em.clear();
+//
+//            // inner join
+//            String query = "select m from Member m inner join m.team t";
+//            List<Member> result = em.createQuery(query, Member.class)
+//                    .getResultList();
+//
+//            // outer join
+//            String query2 = "select m from Member m left outer join m.team t";
+//            List<Member> result2 = em.createQuery(query, Member.class)
+//                    .getResultList();
+//
+//
+//            // 세타 join
+//            String query3 = "select m from Member m, Team t where m.username =t.name";
+//            List<Member> result3 = em.createQuery(query, Member.class)
+//                    .getResultList();
+//            System.out.println("result3 = "+result3.size());
+//
+//            // 조인 대상 필터링
+//            String query4 = "select m from Member m left join m.team t on t.name = 'teamA'";
+//            List<Member> result4 = em.createQuery(query4, Member.class)
+//                    .getResultList();
+//
+//            System.out.println("result4 = "+ result.size());
+//
+//
+//            // 연관관계 없는 엔티티 외부 조인
+//            String query5 = "select m from Member m left join Team t on m.username = t.name";
+//            List<Member> result5 = em.createQuery(query4, Member.class)
+//                    .getResultList();
+
+
+
+            // 객체지향 쿼리 언어1 - 기본 문법 - 서브쿼리
+
+//            // 서브쿼리 예시(From절의 서브쿼리는 안됨 - 비슷한 상황이 생긴다면 join으로 풀어서 해결해야한다)
+//            String query1 = "select (select avg(m1.age) From Member m1) as avgAge from Member m left join Team t on m.username = t.name";
+//            List<Member> result1 = em.createQuery(query1, Member.class)
+//                    .getResultList();
+
+
+            // 객체지향 쿼리 언어1 - 기본 문법 - JPQL의 타입 표현
 
             Team team = new Team();
             team.setName("teamA");
@@ -102,48 +170,31 @@ public class JpqlMain {
 
 
             Team team2 = new Team();
-            team.setName("example");
-            em.persist(team);
+            team2.setName("example12");
+            em.persist(team2);
 
             Member member2 = new Member();
-            member.setUsername("example");
-            member.setAge(10);
-            member.setTeam(team);
-            em.persist(member);
+            member2.setUsername("example");
+            member2.setAge(10);
+            // ENUM 클래스 추가
+            member2.setType(ADMIN);
+            member2.setTeam(team2);
+            em.persist(member2);
 
             em.flush();
             em.clear();
 
-            // inner join
-            String query = "select m from Member m inner join m.team t";
-            List<Member> result = em.createQuery(query, Member.class)
+//            String query = "select m.username, 'HELLO', TRUE FROM Member m where m.type = jpql.MemberType.ADMIN";
+            String query = "select m.username, 'HELLO', TRUE FROM Member m where m.type =:userType";
+            List<Object[]> result = em.createQuery(query)
+                    .setParameter("userType", ADMIN)
                     .getResultList();
 
-            // outer join
-            String query2 = "select m from Member m left outer join m.team t";
-            List<Member> result2 = em.createQuery(query, Member.class)
-                    .getResultList();
-
-
-            // 세타 join
-            String query3 = "select m from Member m, Team t where m.username =t.name";
-            List<Member> result3 = em.createQuery(query, Member.class)
-                    .getResultList();
-            System.out.println("result3 = "+result3.size());
-
-            // 조인 대상 필터링
-            String query4 = "select m from Member m left join m.team t on t.name = 'teamA'";
-            List<Member> result4 = em.createQuery(query4, Member.class)
-                    .getResultList();
-
-            System.out.println("result4 = "+ result.size());
-
-
-            // 연관관계 없는 엔티티 외부 조인
-            String query5 = "select m from Member m left join Team t on m.username = t.name";
-            List<Member> result5 = em.createQuery(query4, Member.class)
-                    .getResultList();
-
+            for (Object[] objects : result) {
+                System.out.println(objects[0]);
+                System.out.println(objects[1]);
+                System.out.println(objects[2]);
+            }
             tx.commit();
         } catch(Exception e){
             tx.rollback();
