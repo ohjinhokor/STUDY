@@ -10,9 +10,15 @@ public class Member {
     private String username;
     private int age;
 
-    @ManyToOne
+    // N 대 1은 항상 fetch를 lazy로 잡아두어야 한다.
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TEAM_ID")
     private Team team;
+
+    public void changeTeam(Team team){
+        this.team = team;
+        team.getMembers().add(this);
+    }
 
     public Long getId() {
         return id;
@@ -36,5 +42,13 @@ public class Member {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
     }
 }

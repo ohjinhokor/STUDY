@@ -66,26 +66,83 @@ public class JpqlMain {
 //            System.out.println("age ="+ memberDTO.getAge());
 
 
-            // 객체지향 쿼리 언어1 - 기본 문법 - 페이징
-            for(int i=0; i<100; i++){
-                Member member = new Member();
-                member.setUsername("memberName"+i);
-                member.setAge(i);
-                em.persist(member);
-            }
+//            // 객체지향 쿼리 언어1 - 기본 문법 - 페이징
+//            for(int i=0; i<100; i++){
+//                Member member = new Member();
+//                member.setUsername("memberName"+i);
+//                member.setAge(i);
+//                em.persist(member);
+//            }
+//            em.flush();
+//            em.clear();
+//
+//
+//            List<Member> result = em.createQuery("select m from Member m order by m.age desc", Member.class)
+//                    .setFirstResult(1)
+//                    .setMaxResults(10)
+//                    .getResultList();
+//
+//            System.out.println("result.size = "+ result.size());
+//            for (Member member : result) {
+//                System.out.println("member.age = "+member.getAge());
+//            }
+
+
+            // 객체지향 쿼리 언어1 - 기본 문법 - 조인
+
+            Team team = new Team();
+            team.setName("teamA");
+            em.persist(team);
+
+            Member member = new Member();
+            member.setUsername("memberName");
+            member.setAge(10);
+            member.setTeam(team);
+            em.persist(member);
+
+
+            Team team2 = new Team();
+            team.setName("example");
+            em.persist(team);
+
+            Member member2 = new Member();
+            member.setUsername("example");
+            member.setAge(10);
+            member.setTeam(team);
+            em.persist(member);
+
             em.flush();
             em.clear();
 
-
-            List<Member> result = em.createQuery("select m from Member m order by m.age desc", Member.class)
-                    .setFirstResult(1)
-                    .setMaxResults(10)
+            // inner join
+            String query = "select m from Member m inner join m.team t";
+            List<Member> result = em.createQuery(query, Member.class)
                     .getResultList();
 
-            System.out.println("result.size = "+ result.size());
-            for (Member member : result) {
-                System.out.println("member.age = "+member.getAge());
-            }
+            // outer join
+            String query2 = "select m from Member m left outer join m.team t";
+            List<Member> result2 = em.createQuery(query, Member.class)
+                    .getResultList();
+
+
+            // 세타 join
+            String query3 = "select m from Member m, Team t where m.username =t.name";
+            List<Member> result3 = em.createQuery(query, Member.class)
+                    .getResultList();
+            System.out.println("result3 = "+result3.size());
+
+            // 조인 대상 필터링
+            String query4 = "select m from Member m left join m.team t on t.name = 'teamA'";
+            List<Member> result4 = em.createQuery(query4, Member.class)
+                    .getResultList();
+
+            System.out.println("result4 = "+ result.size());
+
+
+            // 연관관계 없는 엔티티 외부 조인
+            String query5 = "select m from Member m left join Team t on m.username = t.name";
+            List<Member> result5 = em.createQuery(query4, Member.class)
+                    .getResultList();
 
             tx.commit();
         } catch(Exception e){
