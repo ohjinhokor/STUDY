@@ -198,7 +198,71 @@ public class JpqlMain {
 
 
 
-//             객체지향 쿼리 언어1 - 기본 문법 - 조건식
+////             객체지향 쿼리 언어1 - 기본 문법 - 조건식
+//            Team team = new Team();
+//            team.setName("teamA");
+//            em.persist(team);
+//
+//            Member member = new Member();
+//            member.setUsername("관리자");
+//            member.setAge(10);
+//            member.setTeam(team);
+//            em.persist(member);
+//
+//
+//            Team team2 = new Team();
+//            team2.setName("example12");
+//            em.persist(team2);
+//
+//            Member member2 = new Member();
+//            member2.setUsername("example");
+//            member2.setAge(10);
+//            // ENUM 클래스 추가
+//            member2.setType(ADMIN);
+//            member2.setTeam(team2);
+//            em.persist(member2);
+//
+//            em.flush();
+//            em.clear();
+//
+//
+////            //기본 CASE식
+////            String query = "select "+
+////                    "case when m.age <= 10 then '학생요금' " +
+////                    "when m.age >= 60 then '경로요금' " +
+////                    "else '일반요금' "+
+////                    "end " +
+////                    "from Member m";
+////            List<String> result = em.createQuery(query, String.class)
+////                    .getResultList();
+////
+////            for (String s : result) {
+////                System.out.println("s = "+ s);
+////            }
+//
+//
+////            // coalesce
+////            String query2 = "select coalesce(m.username, '이름 없는 회원') from Member m ";
+////            List<String> result2 = em.createQuery(query2, String.class)
+////                    .getResultList();
+////
+////
+////            for (String s : result2) {
+////                System.out.println("s = "+ s);
+////            }
+//
+//            //nullif (m.username이 '관리자'이면 null을 반환하게된다.)
+//            String query2 = "select nullif(m.username, '관리자') from Member m ";
+//            List<String> result2 = em.createQuery(query2, String.class)
+//                    .getResultList();
+//
+//
+//            for (String s : result2) {
+//                System.out.println("s = "+ s);
+//            }
+
+
+            //객체지향 쿼리 언어1 - 기본 문법 - JPQL 기본 함수
             Team team = new Team();
             team.setName("teamA");
             em.persist(team);
@@ -225,39 +289,15 @@ public class JpqlMain {
             em.flush();
             em.clear();
 
-
-//            //기본 CASE식
-//            String query = "select "+
-//                    "case when m.age <= 10 then '학생요금' " +
-//                    "when m.age >= 60 then '경로요금' " +
-//                    "else '일반요금' "+
-//                    "end " +
-//                    "from Member m";
-//            List<String> result = em.createQuery(query, String.class)
-//                    .getResultList();
-//
-//            for (String s : result) {
-//                System.out.println("s = "+ s);
-//            }
-
-
-//            // coalesce
-//            String query2 = "select coalesce(m.username, '이름 없는 회원') from Member m ";
-//            List<String> result2 = em.createQuery(query2, String.class)
-//                    .getResultList();
-//
-//
-//            for (String s : result2) {
-//                System.out.println("s = "+ s);
-//            }
-
-            //nullif (m.username이 '관리자'이면 null을 반환하게된다.)
-            String query2 = "select nullif(m.username, '관리자') from Member m ";
-            List<String> result2 = em.createQuery(query2, String.class)
+            // 쿼리 예시들
+            String query = "select 'a' || 'b' From Member m";
+            String query2 = "select substring(m.username, 2, 3) From Member m";
+            String query3 = "select size(t.members) From Team t";
+            List<String> result = em.createQuery(query2, String.class)
                     .getResultList();
 
 
-            for (String s : result2) {
+            for (String s : result) {
                 System.out.println("s = "+ s);
             }
 
