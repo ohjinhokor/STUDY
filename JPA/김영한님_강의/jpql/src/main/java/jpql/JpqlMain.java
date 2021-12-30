@@ -262,44 +262,62 @@ public class JpqlMain {
 //            }
 
 
-            //객체지향 쿼리 언어1 - 기본 문법 - JPQL 기본 함수
-            Team team = new Team();
-            team.setName("teamA");
-            em.persist(team);
+//            //객체지향 쿼리 언어1 - 기본 문법 - JPQL 기본 함수
+//            Team team = new Team();
+//            team.setName("teamA");
+//            em.persist(team);
+//
+//            Member member = new Member();
+//            member.setUsername("관리자");
+//            member.setAge(10);
+//            member.setTeam(team);
+//            em.persist(member);
+//
+//
+//            Team team2 = new Team();
+//            team2.setName("example12");
+//            em.persist(team2);
+//
+//            Member member2 = new Member();
+//            member2.setUsername("example");
+//            member2.setAge(10);
+//            // ENUM 클래스 추가
+//            member2.setType(ADMIN);
+//            member2.setTeam(team2);
+//            em.persist(member2);
+//
+//            em.flush();
+//            em.clear();
+//
+//            // 쿼리 예시들
+//            String query = "select 'a' || 'b' From Member m";
+//            String query2 = "select substring(m.username, 2, 3) From Member m";
+//            String query3 = "select size(t.members) From Team t";
+//            List<String> result = em.createQuery(query2, String.class)
+//                    .getResultList();
+//
+//
+//            for (String s : result) {
+//                System.out.println("s = "+ s);
+//            }
 
-            Member member = new Member();
-            member.setUsername("관리자");
-            member.setAge(10);
-            member.setTeam(team);
-            em.persist(member);
 
 
-            Team team2 = new Team();
-            team2.setName("example12");
-            em.persist(team2);
+            //객체지향 쿼리 언어2 - 중급 문법 - 경로 표현식
+            // 경로표현식이란 -> 점을 찍어 객체 그래프를 탐색 하는 것
+            // 1. 상태 필드, 2. 연관 필드 - (단일 값 연관 필드, 컬렉션 값 연관 필드)
 
-            Member member2 = new Member();
-            member2.setUsername("example");
-            member2.setAge(10);
-            // ENUM 클래스 추가
-            member2.setType(ADMIN);
-            member2.setTeam(team2);
-            em.persist(member2);
+            // 상태 필드 : 경로 탐색의 끝, 탐색 x  // ex) select m.username From Member m
+            // 단일 값 연관 경로 : 묵시적 내부 조인(inner join) 발생, 탐색 O // ex) select m.team From Member m
+            // 컬렉션 값 연관 경로 :묵시적 내부 조인 발생,  탐색 X // ex) select t.members From Team t -> 사용 거의 안함
+            // From 절에서 명시적 조인을 통해 별칭을 얻으면 별칭을 통해 탐색 가능 하다 // ex) select m.username From Team t join t.members m
+            // 묵시적인 내부 조인이 발생하도록 코드를 짜는 것은 좋지 않다.(단일 값 연관 경로도 묵시적 내부 조인이 발생한다는 것을 알자)
 
-            em.flush();
-            em.clear();
+            // 결과적으로 하고 싶은 말은 묵시적 조인을 사용하지 말 것!!
+            // 궁금증.. 묵시적 조인을 사용하지 않으면 어떤식으로 쿼리를 짜는 것이 옳은가..
 
-            // 쿼리 예시들
-            String query = "select 'a' || 'b' From Member m";
-            String query2 = "select substring(m.username, 2, 3) From Member m";
-            String query3 = "select size(t.members) From Team t";
-            List<String> result = em.createQuery(query2, String.class)
-                    .getResultList();
-
-
-            for (String s : result) {
-                System.out.println("s = "+ s);
-            }
+            // select m from Member m join m.team t -> 명시적 조인
+           // select m.team from Member m -> 묵시적 조인(내부 조인만 가능)
 
             tx.commit();
         } catch(Exception e){
