@@ -463,9 +463,7 @@ public class JpqlMain {
 //            for (Member member : resultList) {
 //                System.out.println("member = " + member);
 //            }
-
-
-
+            q
 
 
             tx.commit();
