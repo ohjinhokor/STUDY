@@ -413,6 +413,60 @@ public class JpqlMain {
             // fetch join을 연이어서 사용할 경우에만 별칭을 사용한다.
 
 
+            // 객제지향 쿼리 언어2 - 중급 문법 -다형성 쿼리 -> select i from Item i where type(i) IN (Book, Movie)
+
+
+            // 객제지향 쿼리 언어2 - 중급 문법 - 엔티티 직접 사용
+            // 엔티티를 파라미터로 줄 수 있음
+            // select m from Member m where m = :member 이후에 setParameter("member", member)
+
+
+//            // 객제지향 쿼리 언어2 - 중급 문법 - Named 쿼리
+//            // Member 클래스 위에 @NamedQuery를 추가한다. / 오류를 잡아내기 좋은 방법임.
+//
+//
+//
+//            Team teamA = new Team();
+//            teamA.setName("teamA");
+//            em.persist(teamA);
+//
+//            Team teamB = new Team();
+//            teamB.setName("teamB");
+//            em.persist(teamB);
+//
+//
+//            Member member1 = new Member();
+//            member1.setUsername("회원1");
+//            member1.setAge(10);
+//            member1.setTeam(teamA);
+//            em.persist(member1);
+//
+//            Member member2 = new Member();
+//            member2.setUsername("회원2");
+//            member2.setAge(10);
+//
+//            member2.setType(ADMIN);
+//            member2.setTeam(teamB);
+//            em.persist(member2);
+//
+//            Member member3 = new Member();
+//            member3.setTeam(teamB);
+//            em.persist(member3);
+//
+//            em.flush();
+//            em.clear();
+//
+//            List<Member> resultList = em.createNamedQuery("Member.findByUsername", Member.class)
+//                    .setParameter("username", "회원1")
+//                    .getResultList();
+//
+//            for (Member member : resultList) {
+//                System.out.println("member = " + member);
+//            }
+
+
+
+
 
             tx.commit();
         } catch(Exception e){
