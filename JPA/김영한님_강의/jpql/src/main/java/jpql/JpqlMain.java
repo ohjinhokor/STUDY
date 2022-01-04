@@ -465,7 +465,55 @@ public class JpqlMain {
 //            }
 
 
+//          // 객제지향 쿼리 언어2 - 중급 문법 - 벌크 연산
+            // 쿼리 한 번으로 여러 로우 변경(엔티티)
 
+            Team teamA = new Team();
+            teamA.setName("teamA");
+            em.persist(teamA);
+
+            Team teamB = new Team();
+            teamB.setName("teamB");
+            em.persist(teamB);
+
+
+            Member member1 = new Member();
+            member1.setUsername("회원1");
+            member1.setAge(10);
+            member1.setTeam(teamA);
+            em.persist(member1);
+
+            Member member2 = new Member();
+            member2.setUsername("회원2");
+            member2.setAge(10);
+
+            member2.setType(ADMIN);
+            member2.setTeam(teamB);
+            em.persist(member2);
+
+            Member member3 = new Member();
+            member3.setTeam(teamB);
+            em.persist(member3);
+
+//            em.flush();
+//            em.clear();
+
+            // 영향을 받은 카운트가 나옴
+            int resultCount = em.createQuery("update Member m set m.age =20")
+                    .executeUpdate();
+
+//            em.clear();
+            System.out.println("resultCount = " + resultCount);
+
+            // 벌크 연산을 실행할 경우 주의해야 할 점
+            // -> 벌크 연산을 아예 먼저 실행하던지, 아니면 벌크 연산 수행 후 영속성 컨텍스트를 초기화해야한다.
+            // 예를 들어 위의 코드 상황에서 flush를 주석처리한다면 영속성 컨텍스트에 있는 객체의 나이는 변하지 않는다.
+
+            System.out.println("member1.getAge() = " + member1.getAge());
+            System.out.println("member2.getAge() = " + member2.getAge());
+            System.out.println("member3.getAge() = " + member3.getAge());
+
+            // 따라서 위처럼 em.clear()를 실행하여 영속성컨텍스트를 초기화 하는 것이 좋다
             tx.commit();
         } catch(Exception e){
             tx.rollback();
