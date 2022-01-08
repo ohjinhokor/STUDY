@@ -1,32 +1,45 @@
 package study.datajpa.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(of = {"id","username","age"}) // team처럼 다른 entity는 나오게 하지 않아야 한다. 잘못하면 무한루프가 될 수도..
 public class Member {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memberId;
-
+    @Column(name = "member_id")
+    private Long id;
     private String username;
+    private int age;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id")
+    private Team team;
 
     // 엔티티의 기본생성자는 private이 아니라 protected로 열어놔야 함
-    protected Member() {
-    }
 
     public Member(String username) {
         this.username = username;
     }
 
+    public Member(String username, int age, Team team) {
+        this.username = username;
+        this.age = age;
+        this.team = team;
+    }
+
     public void changeUsername(String username){
         this.username = username;
     }
+
+    public void changeTeam(Team team){
+        this.team = team;
+        team.getMembers().add(this);
+    }
+
 }
