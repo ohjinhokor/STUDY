@@ -18,6 +18,7 @@ public class MemberRepositoryTest {
 
     @Test
     public void testMember(){
+        System.out.println("memberRepository.getClass() = " + memberRepository.getClass()); // 이를 통해 스프링 datajpa가 구현체를 만들어서 주입했음을 알 수 있음.
         Member member = new Member("memberA");
         Member savedMember = memberRepository.save(member);
 
