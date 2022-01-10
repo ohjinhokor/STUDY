@@ -85,4 +85,20 @@ public class MemberRepositoryTest {
         assertThat(result.size()).isEqualTo(1);
 
     }
+
+    // 쿼리 메소드 기능 - JPA NamedQuery
+    @Test
+    public void findByUserName(){
+
+        Member m1 = new Member("AAA", 10);
+        Member m2 = new Member("BBB", 20);
+
+        memberRepository.save(m1);
+        memberRepository.save(m2);
+
+
+        List<Member> result = memberRepository.findByUsername("AAA");
+        Member findMember = result.get(0);
+        assertThat(findMember).isEqualTo(m1);
+    }
 }

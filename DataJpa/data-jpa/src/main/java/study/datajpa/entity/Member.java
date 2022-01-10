@@ -9,6 +9,11 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"id","username","age"}) // team처럼 다른 entity는 나오게 하지 않아야 한다. 잘못하면 무한루프가 될 수도..
+// JPA NamedQuery(실무에서 자주 사용하지는 않음)
+@NamedQuery(
+        name="Member.findByUsername",
+        query="select m from Member m where m.username = :username"
+)
 public class Member {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
