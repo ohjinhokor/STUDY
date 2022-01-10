@@ -7,6 +7,7 @@ import study.datajpa.dto.MemberDto;
 import study.datajpa.entity.Member;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
@@ -39,5 +40,10 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("select m from Member m where m.username in :names")
     List<Member> findByNames(@Param("names") List<String> names);
 
-    // 쿼리 메소드 기능 - 반환 타입
+    // 쿼리 메소드 기능 - 반환 타입 find다음의 단어는 크게 상관 없는 듯 By 다음 나오는 필드 이름과 반환 값이 중요함
+    List<Member> findMemberListByUsername(String username);
+
+    Member findMemberByUsername(String username);
+
+    Optional<Member> findOptionalMemberByUsername(String username);
 }

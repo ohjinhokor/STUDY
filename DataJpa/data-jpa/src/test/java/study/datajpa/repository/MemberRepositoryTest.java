@@ -12,6 +12,7 @@ import study.datajpa.entity.Team;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -169,5 +170,24 @@ public class MemberRepositoryTest {
         }
     }
 
+    // 쿼리 메소드 기능 - 반환 타입
+    @Test
+    public void returnType(){
+        Member m1 = new Member("AAA", 10);
+        Member m2 = new Member("BBB", 20);
 
+        memberRepository.save(m1);
+        memberRepository.save(m2);
+
+        List<Member> findMemberList = memberRepository.findMemberListByUsername("AAA");
+        Member findMember = memberRepository.findMemberByUsername("AAA");
+        Optional<Member> findOptionalMember = memberRepository.findOptionalMemberByUsername("AAA");
+
+        // 반환타입에 대한 설명
+        // list일 떄는 절대로 null이 아니다. 따라서 if(result==null)->이런거 할 필요 없음. 좋은 코드도 아님
+        // optional일 때랑, optional이 아닐 때 null을 처리하는 방식이 다르다.
+
+        //  <<<<Optional을 쓰는 것이 국룰!!!!>>>>
+
+    }
 }
