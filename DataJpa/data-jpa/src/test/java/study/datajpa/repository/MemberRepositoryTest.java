@@ -189,5 +189,7 @@ public class MemberRepositoryTest {
 
         //  <<<<Optional을 쓰는 것이 국룰!!!!>>>>
 
+
+
     }
 }
