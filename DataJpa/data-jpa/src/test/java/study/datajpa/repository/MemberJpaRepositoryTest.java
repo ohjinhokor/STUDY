@@ -129,7 +129,6 @@ class MemberJpaRepositoryTest {
         for (Member member : members) {
             System.out.println("member = " + member);
         }
-
     }
 }
 

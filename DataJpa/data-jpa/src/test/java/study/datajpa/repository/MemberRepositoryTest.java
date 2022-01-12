@@ -4,6 +4,10 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import study.datajpa.dto.MemberDto;
@@ -189,7 +193,79 @@ public class MemberRepositoryTest {
 
         //  <<<<Optional을 쓰는 것이 국룰!!!!>>>>
 
-
-
     }
+
+    // 쿼리 메소드 기능 - 스프링 데이터 JPA 페이징과 정렬
+    @Test
+    public void paging(){
+
+        //given
+
+        memberRepository.save(new Member("member1",10));
+        memberRepository.save(new Member("member2",10));
+        memberRepository.save(new Member("member7",10));
+        memberRepository.save(new Member("member8",10));
+
+        memberRepository.save(new Member("member3",10));
+        memberRepository.save(new Member("member4",10));
+        memberRepository.save(new Member("member5",10));
+
+        int age =10;
+        PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "username"));
+
+
+        //when
+        Page<Member> page = memberRepository.findByAge(age, pageRequest);
+
+
+        //then
+        List<Member> content = page.getContent();
+        assertThat(content.size()).isEqualTo(3);
+        assertThat(page.getTotalElements()).isEqualTo(7);
+        assertThat(page.getNumber()).isEqualTo(0);
+        assertThat(page.getTotalPages()).isEqualTo(3);
+        assertThat(page.isFirst()).isTrue();
+        assertThat(page.hasNext()).isTrue();
+
+
+        for (Member member : content) {
+            System.out.println("\n\nmember = " + member+"\n\n");
+        }
+    }
+
+    @Test
+    public void slicing(){
+        //given
+
+        memberRepository.save(new Member("member1",10));
+        memberRepository.save(new Member("member2",10));
+        memberRepository.save(new Member("member7",10));
+        memberRepository.save(new Member("member8",10));
+
+        memberRepository.save(new Member("member3",10));
+        memberRepository.save(new Member("member4",10));
+        memberRepository.save(new Member("member5",10));
+
+        int age =10;
+
+        PageRequest pageRequest = PageRequest.of(0, 4, Sort.by(Sort.Direction.DESC, "username"));
+
+        //when
+        Slice<Member> page = memberRepository.findByAgeSlice(age, pageRequest);
+
+        //then
+        List<Member> content = page.getContent();
+        assertThat(content.size()).isEqualTo(4);
+//        assertThat(page.getTotalElements()).isEqualTo(7);
+        assertThat(page.getNumber()).isEqualTo(0);
+//        assertThat(page.getTotalPages()).isEqualTo(3);
+        assertThat(page.isFirst()).isTrue();
+        assertThat(page.hasNext()).isTrue();
+
+        for (Member member : content) {
+            System.out.println("\n\nmember = " + member+"\n\n");
+        }
+    }
+
+
 }

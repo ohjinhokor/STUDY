@@ -1,5 +1,8 @@
 package study.datajpa.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -46,4 +49,53 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Member findMemberByUsername(String username);
 
     Optional<Member> findOptionalMemberByUsername(String username);
+
+    // 쿼리 메소드 기능 - 스프링 데이터 JPA 페이징과 정렬
+    // 주의!!!! 페이지는 인덱스가 1이 아니라 0부터 시작한다
+    Page<Member> findByAge(int age, Pageable pageable);
+
+    Slice<Member> findByAgeSlice(int age, Pageable pageable);
+
+    // 쿼리 메소드 기능 - 스프링 데이터 JPA 페이징과 정렬 - 카운트 쿼리를 날리는 더 좋은 방법
+
+    @Query(value = "select m from Member m left join m.team",
+            countQuery = "select count(m) from Member m")
+    Page<Member> findByAgeForCount(int age, Pageable pageable);
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
