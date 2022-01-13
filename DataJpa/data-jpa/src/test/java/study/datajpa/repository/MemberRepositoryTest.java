@@ -298,5 +298,32 @@ public class MemberRepositoryTest {
         assertThat(resultCount).isEqualTo(3);
     }
 
+    //쿼리 메소드 기능 - 엔티티 그래프
+    @Test
+    public void findMemberLazy(){
 
+        Team teamA = new Team("teamA");
+        Team teamB = new Team("teamB");
+        teamRepository.save(teamA);
+        teamRepository.save(teamB);
+        Member member1 = new Member("member1",10,teamA);
+        Member member2 = new Member("member2",20,teamB);
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        em.flush();
+        em.clear();
+
+        //when
+        List<Member> members = memberRepository.findAll();
+        for (Member member : members) {
+            System.out.println("member = " + member.getUsername());
+
+            // proxy가 사용됨을 확인할 수 있음
+            System.out.println("member.getTeam().getClass() = " + member.getTeam().getClass());
+
+            // 여기에서 n+1문제가 생김
+            System.out.println("member.getTeam().getName() = " + member.getTeam().getName());;
+        }
+    }
 }
