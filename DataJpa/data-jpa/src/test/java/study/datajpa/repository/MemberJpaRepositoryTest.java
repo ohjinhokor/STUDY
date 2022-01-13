@@ -130,6 +130,25 @@ class MemberJpaRepositoryTest {
             System.out.println("member = " + member);
         }
     }
+
+
+    // 쿼리 메소드 기능 - 벌크성 수정 쿼리
+    @Test
+    public void bulkUpdate(){
+
+        //given
+        memberJpaRepository.save(new Member("member1", 10));
+        memberJpaRepository.save(new Member("member2", 19));
+        memberJpaRepository.save(new Member("member3", 20));
+        memberJpaRepository.save(new Member("member3", 21));
+        memberJpaRepository.save(new Member("member3", 40));
+
+        //when
+        int resultCount = memberJpaRepository.bulkAgePlus(20);
+
+        //then
+        assertThat(resultCount).isEqualTo(3);
+    }
 }
 
 

@@ -14,6 +14,8 @@ import study.datajpa.dto.MemberDto;
 import study.datajpa.entity.Member;
 import study.datajpa.entity.Team;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +29,8 @@ public class MemberRepositoryTest {
 
     @Autowired MemberRepository memberRepository;
     @Autowired TeamRepository teamRepository;
+    @PersistenceContext
+    EntityManager em;
 
     @Test
     public void testMember(){
@@ -233,38 +237,65 @@ public class MemberRepositoryTest {
         }
     }
 
+//    @Test
+//    public void slicing(){
+//        //given
+//
+//        memberRepository.save(new Member("member1",10));
+//        memberRepository.save(new Member("member2",10));
+//        memberRepository.save(new Member("member7",10));
+//        memberRepository.save(new Member("member8",10));
+//
+//        memberRepository.save(new Member("member3",10));
+//        memberRepository.save(new Member("member4",10));
+//        memberRepository.save(new Member("member5",10));
+//
+//        int age =10;
+//
+//        PageRequest pageRequest = PageRequest.of(0, 4, Sort.by(Sort.Direction.DESC, "username"));
+//
+//        //when
+//        Slice<Member> page = memberRepository.findByAge(age, pageRequest);
+//
+//        //then
+//        List<Member> content = page.getContent();
+//        assertThat(content.size()).isEqualTo(4);
+////        assertThat(page.getTotalElements()).isEqualTo(7);
+//        assertThat(page.getNumber()).isEqualTo(0);
+////        assertThat(page.getTotalPages()).isEqualTo(3);
+//        assertThat(page.isFirst()).isTrue();
+//        assertThat(page.hasNext()).isTrue();
+//
+//        for (Member member : content) {
+//            System.out.println("\n\nmember = " + member+"\n\n");
+//        }
+//    }
+
+    // 쿼리 메소드 기능 - 벌크성 수정 쿼리
     @Test
-    public void slicing(){
+    public void bulkUpdate(){
+
         //given
-
         memberRepository.save(new Member("member1",10));
-        memberRepository.save(new Member("member2",10));
-        memberRepository.save(new Member("member7",10));
-        memberRepository.save(new Member("member8",10));
-
-        memberRepository.save(new Member("member3",10));
-        memberRepository.save(new Member("member4",10));
-        memberRepository.save(new Member("member5",10));
-
-        int age =10;
-
-        PageRequest pageRequest = PageRequest.of(0, 4, Sort.by(Sort.Direction.DESC, "username"));
+        memberRepository.save(new Member("member2",19));
+        memberRepository.save(new Member("member3",20));
+        memberRepository.save(new Member("member4",22));
+        memberRepository.save(new Member("member5",40));
 
         //when
-        Slice<Member> page = memberRepository.findByAgeSlice(age, pageRequest);
+        int resultCount = memberRepository.bulkAgePlus(20);
+
+        // 벌크 연산 이후에는 db에 반영하는 작업이 꼭 있어야한다. 또는 @Modifying에 clearAutomatically를 true로 하면 된다!
+        em.flush();
+        em.clear();
+
+
+        List<Member> result = memberRepository.findByUsername("member5");
+        Member member5 = result.get(0);
+        System.out.println("member5 = " + member5); // 벌크연산은 영속성 컨텍스트에 영향을 끼치지 않음을 확인할 수 있음.
 
         //then
-        List<Member> content = page.getContent();
-        assertThat(content.size()).isEqualTo(4);
-//        assertThat(page.getTotalElements()).isEqualTo(7);
-        assertThat(page.getNumber()).isEqualTo(0);
-//        assertThat(page.getTotalPages()).isEqualTo(3);
-        assertThat(page.isFirst()).isTrue();
-        assertThat(page.hasNext()).isTrue();
-
-        for (Member member : content) {
-            System.out.println("\n\nmember = " + member+"\n\n");
-        }
+        assertThat(resultCount).isEqualTo(3);
     }
 
 
