@@ -18,7 +18,7 @@ import java.io.IOException;
 @RequestMapping("/photo")
 @Slf4j
 @RequiredArgsConstructor
-public class MemberController {
+public class PhotoController {
 
     @Value("${file.dir}")
     private String fileDir;
