@@ -13,7 +13,7 @@ import javax.persistence.QueryHint;
 import java.util.List;
 import java.util.Optional;
 
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface MemberRepository extends JpaRepository<Member, Long>, MemberRepositoryCustom {
 
 
     //DATAJPA가 자동으로 함수를 만들어줌.. 이거는 진짜 혁명적인데....?
