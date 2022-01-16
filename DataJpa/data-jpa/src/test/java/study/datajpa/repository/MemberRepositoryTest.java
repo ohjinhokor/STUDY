@@ -221,6 +221,9 @@ public class MemberRepositoryTest {
         //when
         Page<Member> page = memberRepository.findByAge(age, pageRequest);
 
+        // 반환 예시 (Entity를 그대로 반환하는 것은 절대 금지임. dto로 반환해야함)
+        // 이런식으로 dto를 반환하면 된다.
+        Page<MemberDto> toMap = page.map(member -> new MemberDto(member.getId(), member.getUsername(), null));
 
         //then
         List<Member> content = page.getContent();
