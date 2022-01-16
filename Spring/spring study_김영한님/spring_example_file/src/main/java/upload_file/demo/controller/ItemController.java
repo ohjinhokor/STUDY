@@ -41,8 +41,8 @@ public class ItemController {
 
         Item item = new Item();
         item.setItemName(form.getItemName());
-        item.setAttachFile(attachFile);
-        item.setImageFiles(storeImageFiles);
+//        item.setAttachFile(attachFile);
+//        item.setImageFiles(storeImageFiles);
         itemRepository.save(item);
 
         redirectAttributes.addAttribute("itemId", item.getId());
@@ -63,23 +63,23 @@ public class ItemController {
         return new UrlResource("file:" + fileStore.getFUllPath(filename));
     }
 
-    // 다운로드 로직
-    @GetMapping("/attach/{itemId}")
-    public ResponseEntity<Resource> downloadAttach(@PathVariable long itemId) throws MalformedURLException {
-        Item item = itemRepository.findById(itemId);
-
-        // 코드 중간에 item에 대한 접근권한이 있는지 확인하는 로직이 있으면 좋다.
-        // 여기서는 있다고 가정함
-
-        String storeFileName = item.getAttachFile().getStoreFileName();
-        String uploadFileName = item.getAttachFile().getUploadFileName();
-
-        UrlResource urlResource = new UrlResource("file:" + fileStore.getFUllPath(storeFileName));
-        log.info("uploadFilename={}", uploadFileName);
-
-        String contentDisposition = "attachment; filename=\"" + uploadFileName + "\"";
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
-                .body(urlResource);
-    }
+//    // 다운로드 로직
+//    @GetMapping("/attach/{itemId}")
+//    public ResponseEntity<Resource> downloadAttach(@PathVariable long itemId) throws MalformedURLException {
+//        Item item = itemRepository.findById(itemId);
+//
+//        // 코드 중간에 item에 대한 접근권한이 있는지 확인하는 로직이 있으면 좋다.
+//        // 여기서는 있다고 가정함
+//
+////        String storeFileName = item.getAttachFile().getStoreFileName();
+////        String uploadFileName = item.getAttachFile().getUploadFileName();
+//
+//        UrlResource urlResource = new UrlResource("file:" + fileStore.getFUllPath(storeFileName));
+//        log.info("uploadFilename={}", uploadFileName);
+//
+//        String contentDisposition = "attachment; filename=\"" + uploadFileName + "\"";
+//        return ResponseEntity.ok()
+//                .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+//                .body(urlResource);
+//    }
 }
