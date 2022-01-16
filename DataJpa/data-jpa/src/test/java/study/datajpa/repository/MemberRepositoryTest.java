@@ -330,6 +330,7 @@ public class MemberRepositoryTest {
         }
     }
 
+    //쿼리 메소드 기능 - JPA Hint&Lock
     @Test
     public void queryHint(){
 
@@ -356,6 +357,14 @@ public class MemberRepositoryTest {
 
         //when
         List<Member> result = memberRepository.findLockByUsername("member1");
-
     }
+
+    // 확장 기능 - 사용자 정의 리포지토리 구현
+    // 사용자 정의 메서드 기능을 사용하는 예시 - 나가는 쿼리를 확인해보자
+    @Test
+    public void callCustom() {
+        List<Member> memberCustom = memberRepository.findMemberCustom();
+    }
+
+
 }
