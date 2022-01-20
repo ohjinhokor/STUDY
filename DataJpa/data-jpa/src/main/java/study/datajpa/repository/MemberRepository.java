@@ -103,4 +103,21 @@ public interface MemberRepository extends JpaRepository<Member, Long>, MemberRep
     List<UsernameOnlyDto> findProjections2ByUsername(@Param("username") String username);
 
     List<NestedClosedProjections> findProjections3ByUsername(@Param("username") String username);
+
+
+    // 나머지 기능들 - 네이티브 쿼리
+    // sort가 정상동작하지 않을 수도 있음
+    // JPQL처럼 애플리케이션 로딩 시점에 문법 확인 불가
+    // 동적 쿼리 불가
+    // 결론적으로는 잘 사용하지 않음.. 사용한다면 JdbcTemplate이나 MyBatis권장
+
+    @Query(value = "select * from member where username =?", nativeQuery = true)
+    Member findByNativeQuery(String username);
+
+    //최근에 projections가 nativeQuery에서 사용할 수 있게 됨. 이건 좀 유용한 듯
+    @Query(value = "select m.member_id as id, m.username, t.name as teamName "+
+            "from member m left join team t",
+            countQuery = "select count(*) from member"
+            ,nativeQuery = true)
+    Page<MemberProjection> findByNativeProjection(Pageable pageable);
 }
