@@ -1,5 +1,6 @@
 package study.querydsl;
 
+import com.querydsl.core.QueryResults;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -7,9 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import study.querydsl.entity.Member;
+import study.querydsl.entity.QMember;
 import study.querydsl.entity.Team;
 
 import javax.persistence.EntityManager;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static study.querydsl.entity.QMember.member;
@@ -121,5 +125,35 @@ public class QuerydslBasicTest {
                 .fetchOne();
 
         assertThat(findMember.getUsername()).isEqualTo("member1");
+    }
+
+    // 기본 문법 - 결과 조회
+    @Test
+    public void resultFetchTest(){
+        List<Member> fetch = queryFactory
+                .selectFrom(member)
+                .fetch();
+
+        Member fetchOne = queryFactory
+                .selectFrom(QMember.member)
+                .fetchOne();
+
+        Member fetchFirst = queryFactory
+                .selectFrom(QMember.member)
+                .fetchFirst();
+
+        //공식문서에서는 fetch()를 권장함
+        QueryResults<Member> results = queryFactory
+                .selectFrom(member)
+                .fetchResults();
+
+        long total = results.getTotal();
+        System.out.println("total =" + total);
+        List<Member> content = results.getResults();
+
+        //여기서는 쿼리가 count 쿼리가 나감
+        long countTotal = queryFactory
+                .selectFrom(member)
+                .fetchCount();
     }
 }
