@@ -14,6 +14,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static study.querydsl.entity.QMember.*;
 
 @SpringBootTest
 @Transactional
@@ -60,29 +61,6 @@ class MemberTest {
         }
     }
 
-    @Test
-    public void startJPQL(){
-        //member1을 찾아라
-        Member findMember = em.createQuery("select m from Member m where m.username =:username", Member.class)
-                .setParameter("username", "member1")
-                .getSingleResult();
-
-        assertThat(findMember.getUsername()).isEqualTo("member1");
-    }
-
-    @Test
-    public void startQuerydsl(){
-
-        QMember m = new QMember("m");
-
-        Member findMember = queryFactory // queryFactory는 전역변수로 선언되어있음음
-               .select(m)
-                .from(m)
-                .where(m.username.eq("member1")) //파라미터 바인딩 처리
-                .fetchOne();
-
-        assertThat(findMember.getUsername()).isEqualTo("member1");
-    }
 }
 
 
