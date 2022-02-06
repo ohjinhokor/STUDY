@@ -134,9 +134,12 @@ public class QuerydslBasicTest {
                 .selectFrom(member)
                 .fetch();
 
+        // 여기서 예외발생됨. 결과가 1개가 아니기 때문
         Member fetchOne = queryFactory
                 .selectFrom(QMember.member)
                 .fetchOne();
+
+        System.out.println(fetchOne);
 
         Member fetchFirst = queryFactory
                 .selectFrom(QMember.member)
@@ -183,7 +186,33 @@ public class QuerydslBasicTest {
         assertThat(member5.getUsername()).isEqualTo("member5");
         assertThat(member6.getUsername()).isEqualTo("member6");
         assertThat(memberNull.getUsername()).isNull();
-
     }
 
+    //기본 문법 - 페이징
+    @Test
+    public void paging(){
+        List<Member> result = queryFactory
+                .selectFrom(member)
+                .orderBy(member.username.desc())
+                .offset(1) // 0부터 시작임
+                .limit(2)
+                .fetch();
+
+        assertThat(result.size()).isEqualTo(2);
+    }
+
+    @Test
+    public void paging2(){
+        QueryResults<Member> queryResults = queryFactory
+                .selectFrom(member)
+                .orderBy(member.username.desc())
+                .offset(1) // 0부터 시작임
+                .limit(2)
+                .fetchResults();
+
+        assertThat(queryResults.getTotal()).isEqualTo(4);
+        assertThat(queryResults.getLimit()).isEqualTo(2);
+        assertThat(queryResults.getOffset()).isEqualTo(1);
+        assertThat(queryResults.getResults()).isEqualTo(2);
+    }
 }
