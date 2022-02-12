@@ -2,6 +2,8 @@ package study.querydsl;
 
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -378,5 +380,37 @@ public class QuerydslBasicTest {
         //team이 프록시인지 아닌지 확인 하는 작업
         boolean loaded = emf.getPersistenceUnitUtil().isLoaded(findMember.getTeam());
         assertThat(loaded).as("페치 조인 적용").isTrue();
+    }
+
+
+    // 기본 문법 - Case문(대부분의 경우에서 db에서 보다는 코드 레벨에서 바꾸기를 추천)
+   @Test
+    public void basicCase(){
+        List<String> result = queryFactory
+                .select(member.age
+                        .when(10).then("열살")
+                        .when(20).then("스무살")
+                        .otherwise("기타"))
+                .from(member)
+                .fetch();
+
+        for (String s : result) {
+            System.out.println("s = " + s);
+        }
+    }
+
+    @Test
+    public void complexCase(){
+        List<String> result = queryFactory
+                .select(new CaseBuilder()
+                        .when(member.age.between(0, 20)).then("0~20살")
+                        .when(member.age.between(21, 30)).then("21~30살")
+                        .otherwise("기타"))
+                .from(member)
+                .fetch();
+
+        for (String s : result) {
+            System.out.println("s = " + s);
+        }
     }
 }
