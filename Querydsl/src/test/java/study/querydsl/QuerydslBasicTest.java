@@ -525,4 +525,37 @@ public class QuerydslBasicTest {
 
         }
     }
+
+    // 중급 분법 - 프로젝션과 결과 반환 - 기본
+    @Test
+    public void simpleProjection(){
+        List<String> reuslt = queryFactory
+                .select(member.username)
+                .from(member)
+                .fetch();
+
+        for (String s : reuslt) {
+            System.out.println("s = " + s);
+        }
+    }
+
+    /**
+     * 주의점!!
+     * tuple은 querydsl에서 사용하는 객체이다. 따라서 service에 tuple을 그대로 가져다 쓰는거는 service가 repository에 의존하는 현상이 생김.
+     * tuple을 그냥 반환하기보다는 dto를 사용하는 것이 바람직하다!
+     */
+    @Test
+    public void tupleProjection(){
+        List<Tuple> result = queryFactory
+                .select(member.username, member.age)
+                .from(member)
+                .fetch();
+
+        for (Tuple tuple : result) {
+            String username = tuple.get(member.username);
+            Integer age = tuple.get(member.age);
+            System.out.println("username = " + username);
+            System.out.println("age = " + age);
+        }
+    }
 }
