@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import study.querydsl.dto.MemberDto;
+import study.querydsl.dto.QMemberDto;
 import study.querydsl.dto.UserDto;
 import study.querydsl.entity.Member;
 import study.querydsl.entity.QMember;
@@ -668,6 +669,22 @@ public class QuerydslBasicTest {
 
         for (UserDto userDto : result) {
             System.out.println("userDto = " + userDto);
+        }
+    }
+
+    // 중급 문법 - 프로젝션과 결과 반환 - @QueryProjection
+    // DTO의 생성자에 @QueryProjection을 붙이는 방법을 사용한다
+    //@QueryProjection의 장점 : dto와 매핑되지 않는 값이 들어올 경우 컴파일 에러를 통해 바로 찾을 수 있다는 것이다.(런타임 에러까지 가지 않는다)
+    //@QueryProjection의 단점 : Q파일을 생성해야함. Dto가 Querydsl을 의존하게됨.
+    @Test
+    public void findDtoByQueryProjection(){
+        List<MemberDto> result = queryFactory
+                .select(new QMemberDto(member.username, member.age))
+                .from(member)
+                .fetch();
+
+        for (MemberDto memberDto : result) {
+            System.out.println("memberDto = " + memberDto);
         }
     }
 
