@@ -4,7 +4,9 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
@@ -716,4 +718,40 @@ public class QuerydslBasicTest {
                 .fetch();
     }
 
+
+    // 중급 문법 - where 다중 파라미터 사용. 김영한님 추천!
+    @Test
+    public void dynamicQuery_WhereParam(){
+        String usernameParam = "member1";
+        Integer ageParam = null;
+
+        List<Member> result = searchMember2(usernameParam, ageParam);
+        assertThat(result.size()).isEqualTo(1);
+    }
+
+    private List<Member> searchMember2(String usernameCond, Integer ageCond) {
+        return queryFactory
+                .selectFrom(member)
+                // where안에 null이 들어가면 무시하게됨
+//                .where(usernameEq(usernameCond), ageEq(ageCond))
+                .where(allEq(usernameCond, ageCond))
+                .fetch();
+    }
+
+    private BooleanBuilder usernameEq(String usernameCond) {
+//        if(usernameCond == null){
+//            return null;
+//        }
+//        return member.username.eq(usernameCond);
+
+        return usernameCond == null ? new BooleanBuilder() : new BooleanBuilder(member.username.eq(usernameCond));
+    }
+
+    private BooleanBuilder ageEq(Integer ageCond) {
+        return ageCond == null ? null : new BooleanBuilder(member.age.eq(ageCond));
+    }
+
+    private BooleanBuilder allEq(String usernameCond, Integer ageCond){
+        return usernameEq(usernameCond).and(ageEq(ageCond));
+    }
 }
