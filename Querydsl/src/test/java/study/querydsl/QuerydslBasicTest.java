@@ -754,4 +754,24 @@ public class QuerydslBasicTest {
     private BooleanBuilder allEq(String usernameCond, Integer ageCond){
         return usernameEq(usernameCond).and(ageEq(ageCond));
     }
+
+
+    /**
+     * 밑의 부분은 동적 쿼리 생성시 null처리를 깔끔하게 처리하는 방법 예시
+     */
+//    private BooleanBuilder ageEq(Integer age) {
+//        return nullSafeBuilder(() -> member.age.eq(age));
+//    }
+//
+//    private BooleanBuilder roleEq(String roleName) {
+//        return nullSafeBuilder(() -> member.roleName.eq(roleName));
+//    }
+//
+//    public static BooleanBuilder nullSafeBuilder(Supplier<BooleanExpression> f) {
+//        try {
+//            return new BooleanBuilder(f.get());
+//        } catch (IllegalArgumentException e) {
+//            return new BooleanBuilder();
+//        }
+//    }
 }
