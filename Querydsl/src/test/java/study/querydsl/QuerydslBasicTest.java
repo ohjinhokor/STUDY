@@ -774,4 +774,57 @@ public class QuerydslBasicTest {
 //            return new BooleanBuilder();
 //        }
 //    }
+
+
+    // 중급 문법 - 삭제, 벌크 연산
+    @Test
+    public void bulkUpdate(){
+
+        //member1 = 10 -> 비회원
+        //member2 = 20 -> 비회원
+        //member3 = 30 -> 유지
+        //member4 = 40 -> 유지
+
+        //주의!
+        //bulk와 관계된 쿼리는 영속성컨텍스트의 값을 바꾸는 것이 아니라 DB에 바로 sql이 날아감
+       long count = queryFactory
+                .update(member)
+                .set(member.username, "비회원")
+                .where(member.age.lt(28))
+                .execute();
+
+        List<Member> result = queryFactory
+                .selectFrom(member)
+                .fetch();
+
+        em.flush();
+        em.clear();
+
+        /**
+         *
+         * 1 차 캐시(영속성 컨텍스트)에는 값이 변경되지 않았으므로
+         * 중간에 em.flush()를 하지 않으면
+         * 위 쿼리의 결과인 result의 member1, member2의 이름은 변경되지 않은 것을 확인 할 수 있다.
+          */
+
+        for (Member member1 : result) {
+            System.out.println("member1 = " + member1);
+        }
+    }
+
+    @Test
+    public void bulkAdd(){
+        long count = queryFactory
+                .update(member)
+                .set(member.age, member.age.add(1))
+                .execute();
+    }
+
+    @Test
+    public void bulkDelete(){
+        long count = queryFactory
+                .delete(member)
+                .where(member.age.gt(10))
+                .execute();
+    }
 }
