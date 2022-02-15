@@ -60,8 +60,6 @@ public class QuerydslBasicTest {
         Member member4 = new Member("member4", 40, teamB);
 
         em.persist(member1);
-
-        System.out.println("\n\n\n " + member1.getId());
         em.persist(member2);
         em.persist(member3);
         em.persist(member4);
