@@ -17,6 +17,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 import study.querydsl.dto.MemberDto;
 import study.querydsl.dto.QMemberDto;
@@ -31,6 +32,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static study.querydsl.entity.QMember.member;
@@ -38,6 +40,7 @@ import static study.querydsl.entity.QTeam.*;
 
 @SpringBootTest
 @Transactional
+@Commit
 public class QuerydslBasicTest {
 
     @Autowired
@@ -161,7 +164,7 @@ public class QuerydslBasicTest {
                 .selectFrom(QMember.member)
                 .fetchFirst();
 
-        //공식문서에서는 fetch()를 권장함
+//        공식문서에서는 fetch()를 권장함
         QueryResults<Member> results = queryFactory
                 .selectFrom(member)
                 .fetchResults();
@@ -569,7 +572,7 @@ public class QuerydslBasicTest {
 
     // 중급 문법 - 프로젝션과 결과 반환 - DTO조회
 
-    //jpql로 하는 경우우
+    //jpql로 하는 경우
     @Test
     public void findDtoByJPQL(){
        List<MemberDto> result = em.createQuery("select new study.querydsl.dto.MemberDto(m.username, m.age) from Member m", MemberDto.class)
@@ -597,7 +600,7 @@ public class QuerydslBasicTest {
     }
 
 
-    // Projections.field를 사용하는 경우 getter와 setter 없어도 가능함함
+    // Projections.field를 사용하는 경우 getter와 setter 없어도 가능함
    @Test
     public void findDtoByField(){
         List<MemberDto> result = queryFactory
@@ -746,7 +749,7 @@ public class QuerydslBasicTest {
     }
 
     private BooleanBuilder ageEq(Integer ageCond) {
-        return ageCond == null ? null : new BooleanBuilder(member.age.eq(ageCond));
+        return ageCond == null ? new BooleanBuilder() : new BooleanBuilder(member.age.eq(ageCond));
     }
 
     private BooleanBuilder allEq(String usernameCond, Integer ageCond){
