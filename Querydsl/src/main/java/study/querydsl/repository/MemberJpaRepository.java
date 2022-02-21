@@ -92,11 +92,12 @@ public class MemberJpaRepository {
                         team.name.as("teamName")
                 ))
                 .from(member)
-                .leftJoin(member.team, team)
+                .leftJoin(member.team, team) // 여기서 오른쪽에 있는 team은 QTeam.team이다.
                 .where(builder)
                 .fetch();
     }
 
+    //강사님이 자주 사용하시는 방법
     public List<MemberTeamDto> search(MemberSearchCondition condition){
         return queryFactory
                 .select(new QMemberTeamDto(
@@ -130,7 +131,6 @@ public class MemberJpaRepository {
     }
 
     private BooleanExpression ageGoe(Integer ageGoe){
-        return member.age.goe(ageGoe);
+        return ageGoe != null ? member.age.goe(ageGoe) : null;
     }
-
 }

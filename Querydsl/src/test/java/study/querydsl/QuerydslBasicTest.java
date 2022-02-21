@@ -472,6 +472,11 @@ public class QuerydslBasicTest {
                 ))
                 .fetch();
 
+        for (Member member1 : result) {
+            System.out.println("member1 = " + member1);
+
+        }
+
         assertThat(result).extracting("age")
                 .containsExactly(40);
     }
@@ -525,7 +530,7 @@ public class QuerydslBasicTest {
         List<Tuple> result = queryFactory
                 .select(member.username,
                         JPAExpressions
-                                .select(memberSub)
+                                .select(memberSub.age.avg())
                                 .from(memberSub))
                 .from(member)
                 .fetch();
@@ -663,6 +668,7 @@ public class QuerydslBasicTest {
                 .fetch();
     }
 
+    //@QueryProjection에 비한 단점 : 잘못된 인자가 생성자에 들어가도 런타임 시점에 오류를 잡을 수 있음
     @Test
     public void findUserDtoByConstructor() {
         List<UserDto> result = queryFactory
@@ -786,20 +792,18 @@ public class QuerydslBasicTest {
         //member3 = 30 -> 유지
         //member4 = 40 -> 유지
 
+        List<Member> result = queryFactory
+                .selectFrom(member)
+                .fetch();
+
         //주의!
         //bulk와 관계된 쿼리는 영속성컨텍스트의 값을 바꾸는 것이 아니라 DB에 바로 sql이 날아감
+        //count는 영향을 받은 row 수
        long count = queryFactory
                 .update(member)
                 .set(member.username, "비회원")
                 .where(member.age.lt(28))
                 .execute();
-
-        List<Member> result = queryFactory
-                .selectFrom(member)
-                .fetch();
-
-        em.flush();
-        em.clear();
 
         /**
          *
@@ -808,8 +812,21 @@ public class QuerydslBasicTest {
          * 위 쿼리의 결과인 result의 member1, member2의 이름은 변경되지 않은 것을 확인 할 수 있다.
           */
 
+        System.out.println("before flush");
         for (Member member1 : result) {
             System.out.println("member1 = " + member1);
+        }
+
+        em.flush();
+        em.clear();
+
+        List<Member> result2 = queryFactory
+                .selectFrom(member)
+                .fetch();
+
+        System.out.println("after flush");
+        for (Member member2 : result2) {
+            System.out.println("member2 = " + member2);
         }
     }
 
@@ -832,6 +849,8 @@ public class QuerydslBasicTest {
     // 중급 문법 - sql function 호출하기
     @Test
     public void sqlFunction(){
+
+        //username에서 member라는 단어를 M으로 치환하여 반환함
         List<String> result = queryFactory
                 .select(Expressions.stringTemplate(
                         "function('replace', {0}, {1}, {2})",
