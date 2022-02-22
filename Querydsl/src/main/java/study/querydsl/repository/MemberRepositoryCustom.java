@@ -13,5 +13,5 @@ public interface MemberRepositoryCustom {
 
     // 데이터와 카운트를 별도로 구하는 방법
    Page<MemberTeamDto> searchPageComplex(MemberSearchCondition condition, Pageable pageable);
-
+   Page<MemberTeamDto> searchPageComplex2(MemberSearchCondition condition, Pageable pageable);
 }
