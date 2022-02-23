@@ -9,11 +9,11 @@ public class NullPointExceptionExample {
 
     public static void main(String[] args) {
 
-        //NPE 발생 o
+        //NPE 발생 x
         int example[] = null;
         System.out.println(example);
 
-        //NPE 발생 x
+        //NPE 발생 o
         System.out.println(example.length);
     }
 }

@@ -15,9 +15,12 @@ shift+ f6 -> rename
 ctrl+alt+p -> 함수 안의 값들 매개변수로 꺼내기
 ctrl + shift + t -> 테스트함수랑 테스트 당하는 함수 왔다갔다
 ctrl + shift + f9 -> devtools를 사용해서 컴파일 할때 리컴파일(watch랑 비슷)
-
+ctrl+n -> 파일 검색
 view -> tool window bars : 왼쪽
-
+ctrl + o -> : 함수 오버라이딩
+shift + alt + 마우스클릭 -> 동시에 여러 곳 수정
+ctrl+alt+왼쪽방향키 -> 방금 전 봤던 라인
+ctrl+alt+b -> 해당 코드의 구현부로 이동
 -----------------------------------------------------------
 
 깃 단축키
