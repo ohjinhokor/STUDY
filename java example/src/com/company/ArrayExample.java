@@ -15,7 +15,6 @@ public class ArrayExample {
         intArray3 = new int[]{1,2,3,4,5,6,7,8}; // -> 가능
 
 
-
         //배열을 나중에 넣는 법
         int[] arrayExample;
         arrayExample = new int[] {1,2,3,4,5};
