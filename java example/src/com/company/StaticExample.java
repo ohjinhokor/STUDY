@@ -1,6 +1,6 @@
 package com.company;
 
-public class staticExample {
+public class StaticExample {
 
     static final String name;
 
